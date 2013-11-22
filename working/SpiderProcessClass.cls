@@ -465,13 +465,13 @@ Private Sub SpiderSite()
                             '
                             ' seed link, never delete
                             '
-                            targetDoc.id = targetDoc.id
+                            targetDoc.Id = targetDoc.Id
                         Else
                             '
                             ' if not a seed link, test for an inbound link
                             '
-                            targetDoc.id = csv.GetCSInteger(CSDocs, "ID")
-                            CSLinks = csv.opencscontent("Spider Links", "ToDocID=" & targetDoc.id, "ID")
+                            targetDoc.Id = csv.GetCSInteger(CSDocs, "ID")
+                            CSLinks = csv.opencscontent("Spider Links", "ToDocID=" & targetDoc.Id, "ID")
                             LinkOK = csv.IsCSOK(CSLinks)
                             Call csv.CloseCS(CSLinks)
                         End If
@@ -495,7 +495,7 @@ Private Sub SpiderSite()
                             updatedDocName = csv.GetCSText(CSDocs, "name")
                             Exit Do
                         Else
-                            Call PrintDebugMessage("Delete document " & targetDoc.id & " because it has no inbound links")
+                            Call PrintDebugMessage("Delete document " & targetDoc.Id & " because it has no inbound links")
                             TextOnlyFilename = csv.GetCSFilename(CSDocs, "TextOnlyFilename", "", "Spider Docs")
                             Call csv.DeleteVirtualFile(TextOnlyFilename)
                             Call csv.DeleteCSRecord(CSDocs)
@@ -590,7 +590,7 @@ Private Sub SpiderLink(CSDocs As Long, targetDoc As docType, AllowLanguageSuppor
     Dim TargetDoctest As docType
     '
     Call SpiderLink_InitLocalStorage(targetDoc)
-    targetDoc.id = csv.GetCSInteger(CSDocs, "ID")
+    targetDoc.Id = csv.GetCSInteger(CSDocs, "ID")
     Link = csv.GetCSText(CSDocs, "LINK")
     '
     'TargetDoctest.ID = targetdoc.id
@@ -604,15 +604,15 @@ Private Sub SpiderLink(CSDocs As Long, targetDoc As docType, AllowLanguageSuppor
     '
     ' ----- Mark all link records inactive coming from this doc (delete them when Link is complete)
     '
-    Call csv.ExecuteSQL("Default", "Update ccSpiderLinks set active=0 where FromDocID=" & targetDoc.id)
+    Call csv.ExecuteSQL("Default", "Update ccSpiderLinks set active=0 where FromDocID=" & targetDoc.Id)
     'Call CSv.DeleteContentRecords("Spider Links", "FromDocID=" & targetdoc.id)
     '
     If Link = "" Then
         '
         ' ----- Delete doc if empty link
         '
-        Call PrintDebugMessage("Removing document DocID [" & targetDoc.id & "], the link is empty")
-        Call csv.DeleteContentRecord("Spider Docs", targetDoc.id)
+        Call PrintDebugMessage("Removing document DocID [" & targetDoc.Id & "], the link is empty")
+        Call csv.DeleteContentRecord("Spider Docs", targetDoc.Id)
     Else
         Call PrintDebugMessage("Spidering link [" & Link & "]")
         targetDoc.urlBase = Link
@@ -639,7 +639,7 @@ Private Sub SpiderLink(CSDocs As Long, targetDoc As docType, AllowLanguageSuppor
         '
         ' ----- remove results from previous tasks
         '
-        Call csv.DeleteContentRecords("Spider Errors", "DocID=" & targetDoc.id)
+        Call csv.DeleteContentRecords("Spider Errors", "DocID=" & targetDoc.Id)
         'Call CSv.DeleteContentRecords("Spider Word Hits", "DocID=" & targetdoc.id)
         '
         ' ----- request and analyze this document
@@ -647,9 +647,9 @@ Private Sub SpiderLink(CSDocs As Long, targetDoc As docType, AllowLanguageSuppor
         ReDim DocLink(1)
         DocLinkSize = 1
         DocLinkCount = 1
-        TextOnlyFilename = CStr(targetDoc.id)
+        TextOnlyFilename = CStr(targetDoc.Id)
         TextOnlyFilename = String(10 - Len(TextOnlyFilename), "0") & TextOnlyFilename
-        TextOnlyFilename = "ccSpiderDocs\TextOnlyFilename\" & targetDoc.id & ".txt"
+        TextOnlyFilename = "ccSpiderDocs\TextOnlyFilename\" & targetDoc.Id & ".txt"
         '
         ' ----- Request the doc
         '
@@ -831,7 +831,7 @@ Dim LoopCnt As Long
     '
     ' ----- Delete all Spider Link records that are still mared inactive
     '
-    Call csv.DeleteContentRecords("Spider Links", "(active=0)and(FromDocID=" & targetDoc.id & ")")
+    Call csv.DeleteContentRecords("Spider Links", "(active=0)and(FromDocID=" & targetDoc.Id & ")")
     '
     Exit Sub
     '
@@ -842,7 +842,7 @@ ErrorTrap:
     ' Errors in and under Spider should abort the SpiderDoc, but return to Spider Application and continue
     '
     AbortLoop = True
-    Call HandleSpiderError("SpiderLink, Link [" & Link & "], DocID [" & targetDoc.id & "]", True)
+    Call HandleSpiderError("SpiderLink, Link [" & Link & "], DocID [" & targetDoc.Id & "]", True)
     End Sub
 '
 '   Use the MS Winsock to get a page and return it in the page buffer
@@ -1176,7 +1176,7 @@ Dim test As String
             SocketResponse = ""
             HTTPResponseHeader = xmlhttp.GetAllResponseHeaders
             HTTPResponseStatus = xmlhttp.StatusText
-            HTTPResponseCode = xmlhttp.Status
+            HTTPResponseCode = xmlhttp.status
         Else
             HTTPResponseHeader = kmaHTTP.ResponseHeader
             SocketResponse = kmaHTTP.SocketResponse
@@ -2403,10 +2403,10 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
     '
     ' ----- set outgoing SpiderLink
     '
-    If targetDoc.id = ToDocID Then
-        targetDoc.id = targetDoc.id
+    If targetDoc.Id = ToDocID Then
+        targetDoc.Id = targetDoc.Id
     Else
-        CSPointer = csv.opencscontent("Spider Links", "(FromDocID=" & targetDoc.id & ")AND(ToDocID=" & ToDocID & ")", , False)
+        CSPointer = csv.opencscontent("Spider Links", "(FromDocID=" & targetDoc.Id & ")AND(ToDocID=" & ToDocID & ")", , False)
         If Not csv.IsCSOK(CSPointer) Then
             '
             ' No Link found, create one
@@ -2415,7 +2415,7 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
             CSPointer = csv.InsertCSRecord("Spider Links", 0)
             If csv.IsCSOK(CSPointer) Then
                 Call csv.SetCS(CSPointer, "Active", True)
-                Call csv.SetCS(CSPointer, "FromDocID", targetDoc.id)
+                Call csv.SetCS(CSPointer, "FromDocID", targetDoc.Id)
                 Call csv.SetCS(CSPointer, "ToDocID", ToDocID)
             End If
         Else
@@ -2425,7 +2425,7 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
             Call csv.SetCS(CSPointer, "Active", True)
         End If
         Call csv.CloseCS(CSPointer)
-        AddMessage = AddMessage & ", spiderlink added FromDocid=" & targetDoc.id & ", ToDocID=" & ToDocID
+        AddMessage = AddMessage & ", spiderlink added FromDocid=" & targetDoc.Id & ", ToDocID=" & ToDocID
     End If
     '
     Call PrintDebugMessage(AddMessage)
@@ -2477,7 +2477,7 @@ Private Sub AddSpiderError(Code As String, IsWarning As Boolean, Cause As String
     If csv.IsCSOK(CSPointer) Then
         Call csv.SetCS(CSPointer, "active", True)
         Call csv.SetCS(CSPointer, "Name", Code)
-        Call csv.SetCS(CSPointer, "DocID", targetDoc.id)
+        Call csv.SetCS(CSPointer, "DocID", targetDoc.Id)
         Call csv.SetCS(CSPointer, "linenumber", LineNumber)
         Call csv.SetCS(CSPointer, "lineposition", LinePosition)
         Call csv.SetCS(CSPointer, "Cause", Cause)
@@ -2488,8 +2488,8 @@ Private Sub AddSpiderError(Code As String, IsWarning As Boolean, Cause As String
     ' Add Site Warning
     '
     Description = Cause
-    If targetDoc.id <> 0 Then
-        Description = Description & ", spider doc " & targetDoc.id
+    If targetDoc.Id <> 0 Then
+        Description = Description & ", spider doc " & targetDoc.Id
     End If
     If LineNumber <> 0 Then
         Description = Description & ", line " & LineNumber & ", position " & LinePosition
@@ -3200,14 +3200,14 @@ Private Sub SpiderLink_AnalyzeDoc_SaveSpiderDocBody(HTMLSearchText As String, Al
             LanguageName = "Any"
             LanguageID = LanguageAnyID
             LanguageText = SpiderLink_AnalyzeDoc_SaveSpiderDocBody_GetLanguageText(HTMLSearchText, "Any")
-            Criteria = "(DocID=" & targetDoc.id & ")and(LanguageID=" & LanguageID & ")"
+            Criteria = "(DocID=" & targetDoc.Id & ")and(LanguageID=" & LanguageID & ")"
             CSBody = csv.opencscontent("Spider Doc Body", Criteria)
             If Not csv.IsCSOK(CSBody) Then
                 Call csv.CloseCS(CSBody)
                 CSBody = csv.InsertCSRecord("Spider Doc Body", 0)
                 End If
             If csv.IsCSOK(CSBody) Then
-                Call csv.SetCS(CSBody, "DocID", targetDoc.id)
+                Call csv.SetCS(CSBody, "DocID", targetDoc.Id)
                 Call csv.SetCS(CSBody, "LanguageID", LanguageAnyID)
                 Call csv.SetCS(CSBody, "BodyText", LanguageText)
             End If
@@ -3218,7 +3218,7 @@ Private Sub SpiderLink_AnalyzeDoc_SaveSpiderDocBody(HTMLSearchText As String, Al
                 LanguageName = csv.GetCSText(CSLanguage, "Name")
                 LanguageID = csv.GetCSInteger(CSLanguage, "ID")
                 LanguageText = SpiderLink_AnalyzeDoc_SaveSpiderDocBody_GetLanguageText(HTMLSearchText, LanguageName)
-                Criteria = "(DocID=" & targetDoc.id & ")and(LanguageID=" & LanguageID & ")"
+                Criteria = "(DocID=" & targetDoc.Id & ")and(LanguageID=" & LanguageID & ")"
                 If LanguageText = "" Then
                     '
                     ' Not in this language, delete any records
@@ -3234,7 +3234,7 @@ Private Sub SpiderLink_AnalyzeDoc_SaveSpiderDocBody(HTMLSearchText As String, Al
                         CSBody = csv.InsertCSRecord("Spider Doc Body", 0)
                         End If
                     If csv.IsCSOK(CSBody) Then
-                        Call csv.SetCS(CSBody, "DocID", targetDoc.id)
+                        Call csv.SetCS(CSBody, "DocID", targetDoc.Id)
                         Call csv.SetCS(CSBody, "LanguageID", LanguageID)
                         Call csv.SetCS(CSBody, "BodyText", LanguageText)
                     End If
@@ -3488,32 +3488,28 @@ Private Function ExtractPDF(strPath As String) As String
                 If gPDDoc.Open(strPath) Then
                     For PagePointer = 0 To gPDDoc.GetNumPages - 1
                         Set pg = gPDDoc.AcquirePage(PagePointer)
-                        If gPDDoc.Open(strPath) Then
-                            Set rect = pg.GetSize
-                            If gPDDoc.Open(strPath) Then
-                                RectAry.Left = 0
-                                RectAry.Right = rect.x * 10
-                                RectAry.bottom = 0
-                                RectAry.Top = rect.y * 10
-                                Set txt = gPDDoc.CreateTextSelect(PagePointer, RectAry)
-                                If Not (txt Is Nothing) Then
-                                    For WordPointer = 0 To txt.GetNumText - 1
-                                        DoEvents
-                                        ExtractPDF = ExtractPDF & " " & Trim(txt.GetText(WordPointer))
-                                        Next
-                                    End If
-                                Set txt = Nothing
-                                End If
-                            Set rect = Nothing
+                        Set rect = pg.GetSize
+                        RectAry.Left = 0
+                        RectAry.Right = rect.x * 10
+                        RectAry.bottom = 0
+                        RectAry.Top = rect.y * 10
+                        Set txt = gPDDoc.CreateTextSelect(PagePointer, RectAry)
+                        If Not (txt Is Nothing) Then
+                            For WordPointer = 0 To txt.GetNumText - 1
+                                DoEvents
+                                ExtractPDF = ExtractPDF & " " & Trim(txt.GetText(WordPointer))
+                                Next
                             End If
+                        Set txt = Nothing
+                        Set rect = Nothing
                         Set pg = Nothing
-                        Next PagePointer
-                    End If
+                    Next PagePointer
                 End If
             End If
+        End If
         gPDDoc.Close
         gApp.Exit
-        End If
+    End If
     Exit Function
     '
     ' ----- Error Trap
@@ -3731,20 +3727,20 @@ Private Sub reportWarning(csv As Object, Name As String, Description As String, 
                 Name = "Page Not Found"
                 newDescriptionSrc = "Bad link"
                 '
-                csFromDoc = csv.opencscontentrecord("spider docs", targetDoc.id)
+                csFromDoc = csv.opencscontentrecord("spider docs", targetDoc.Id)
                 If csv.IsCSOK(csFromDoc) Then
                     newDescriptionSrc = newDescriptionSrc & " (" & csv.GetCSText(csFromDoc, "link") & ")"
                 Else
-                    newDescriptionSrc = newDescriptionSrc & " (Spider Doc #" & targetDoc.id & ")"
+                    newDescriptionSrc = newDescriptionSrc & " (Spider Doc #" & targetDoc.Id & ")"
                 End If
                 Call csv.CloseCS(csFromDoc)
                 '
-                CS = csv.opencscontent("spider links", "(toDocid=" & targetDoc.id & ")")
+                CS = csv.opencscontent("spider links", "(toDocid=" & targetDoc.Id & ")")
                 If Not csv.IsCSOK(CS) Then
                     '
                     ' 404 but the spider link not found
                     '
-                    Call reportWarning_save(csv, Name, Description, generalKey, specificKey, shortDescription, targetDoc.URL, targetDoc.id)
+                    Call reportWarning_save(csv, Name, Description, generalKey, specificKey, shortDescription, targetDoc.URL, targetDoc.Id)
                 Else
                     Do While csv.IsCSOK(CS)
                         newDescription = newDescriptionSrc
@@ -3755,11 +3751,11 @@ Private Sub reportWarning(csv As Object, Name As String, Description As String, 
                             If csv.IsCSOK(csFromDoc) Then
                                 newDescription = newDescription & " found on page " & csv.GetCSText(csFromDoc, "link")
                             Else
-                                newDescription = newDescription & " found, see spider doc ID " & targetDoc.id & "  for more details"
+                                newDescription = newDescription & " found, see spider doc ID " & targetDoc.Id & "  for more details"
                             End If
                             Call csv.CloseCS(csFromDoc)
                         End If
-                        Call reportWarning_save(csv, Name, newDescription, generalKey, newDescription, newDescription, targetDoc.URL, targetDoc.id)
+                        Call reportWarning_save(csv, Name, newDescription, generalKey, newDescription, newDescription, targetDoc.URL, targetDoc.Id)
                         csv.NextCSRecord (CS)
                     Loop
                 End If
@@ -3768,13 +3764,13 @@ Private Sub reportWarning(csv As Object, Name As String, Description As String, 
                 '
                 ' other bad requests, just pass through
                 '
-                Call reportWarning_save(csv, Name, Description, generalKey, specificKey, Description, targetDoc.URL, targetDoc.id)
+                Call reportWarning_save(csv, Name, Description, generalKey, specificKey, Description, targetDoc.URL, targetDoc.Id)
             End If
         Else
             '
             ' pass through no change
             '
-            Call reportWarning_save(csv, Name, Description, generalKey, specificKey, Description, targetDoc.URL, targetDoc.id)
+            Call reportWarning_save(csv, Name, Description, generalKey, specificKey, Description, targetDoc.URL, targetDoc.Id)
         End If
     End If
     '
