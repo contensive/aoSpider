@@ -855,7 +855,8 @@ Private Sub SpiderLink_GetDoc(dataBuildVersion As String, targetDoc As docType)
     Dim LineStart As Long
     Dim Header As String
     Dim UseXml As Boolean
-    Dim kmaHTTP As New kmaHTTP3.HTTPClass
+    Dim kmaHTTP As Object
+    'Dim kmaHTTP As New kmaHTTP3.HTTPClass
     Dim xmlhttp As New XMLHTTP60
     Dim CookiePointer As Long
     Dim CookieGood As Boolean
@@ -879,6 +880,14 @@ Private Sub SpiderLink_GetDoc(dataBuildVersion As String, targetDoc As docType)
     Dim VisitMemberID As Long
     '
     Call PrintDebugMessage("Requesting document from server [" & targetDoc.URL & "]")
+    '
+    ' setup http request object based on contensive version
+    '
+    If csv.KernelServicesVersion < "4.2.000" Then
+        Set kmaHTTP = CreateObject("kmaHTTP3.HTTPClass")
+    Else
+        Set kmaHTTP = CreateObject("contensiveCore.http4Class")
+    End If
     '
     '   If username or password given, authentication was required
     '
@@ -1139,7 +1148,7 @@ Dim test As String
         ' Use the IPWorks http object
         '
         kmaHTTP.UserAgent = UserAgent
-        kmaHTTP.HTTP1.OtherHeaders = "Accept-Language: any" & vbCrLf
+        'kmaHTTP.HTTP1.OtherHeaders = "Accept-Language: any" & vbCrLf
         If (kmaEncodeBoolean(InStr(1, targetDoc.URL, RootPathLink, vbTextCompare))) And (HTTPAuthUsername <> "") Then
             kmaHTTP.Username = HTTPAuthUsername
             kmaHTTP.Password = HTTPAuthPassword
@@ -2594,28 +2603,35 @@ ErrorTrap:
 Private Sub SpiderLink_AnalyzeDoc_SpellCheck(Content As String)
     On Error GoTo ErrorTrap
     '
-    Dim Speller As New SpellingClass
-    Dim WordList As String
-    Dim WordListSplit() As String
-    Dim WordListPointer As Long
-    Dim WordSplit() As String
-    '
-    Call Speller.AddUserDictionary(csv.PhysicalFilePath & SpellCheckUserDictionaryFilename)
-    WordList = Speller.GetUnknownWordList(Content, "", "")
-    If WordList <> "" Then
-        WordListSplit = Split(WordList, vbCrLf)
-        For WordListPointer = 0 To UBound(WordListSplit)
-            If WordListSplit(WordListPointer) <> "" Then
-                WordSplit = Split(WordListSplit(WordListPointer), ",")
-                If InStr(1, "," & DocUnknownWordList & ",", "," & WordSplit(1) & ",", vbTextCompare) = 0 Then
-                    If DocUnknownWordList <> "" Then
-                        DocUnknownWordList = DocUnknownWordList & ","
+    If csv.KernelServicesVersion >= "4.2.000" Then
+        '
+        ' need a dotnet spell checker
+        '
+    Else
+        '
+        Dim Speller As New SpellingClass
+        Dim WordList As String
+        Dim WordListSplit() As String
+        Dim WordListPointer As Long
+        Dim WordSplit() As String
+        '
+        Call Speller.AddUserDictionary(csv.PhysicalFilePath & SpellCheckUserDictionaryFilename)
+        WordList = Speller.GetUnknownWordList(Content, "", "")
+        If WordList <> "" Then
+            WordListSplit = Split(WordList, vbCrLf)
+            For WordListPointer = 0 To UBound(WordListSplit)
+                If WordListSplit(WordListPointer) <> "" Then
+                    WordSplit = Split(WordListSplit(WordListPointer), ",")
+                    If InStr(1, "," & DocUnknownWordList & ",", "," & WordSplit(1) & ",", vbTextCompare) = 0 Then
+                        If DocUnknownWordList <> "" Then
+                            DocUnknownWordList = DocUnknownWordList & ","
                         End If
-                    DocUnknownWordList = DocUnknownWordList & WordSplit(1)
+                        DocUnknownWordList = DocUnknownWordList & WordSplit(1)
                     End If
                 End If
             Next
         End If
+    End If
     Exit Sub
     '
     ' ----- Error Trap
