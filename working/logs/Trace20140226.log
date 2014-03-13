@@ -1,0 +1,3 @@
+"2/26/2014 8:00:19 AM","aoSpider.SpiderForm.SpiderLink_GetDoc getting URL [HTTP://test19/index.php] Unexpected ErrorTrap, will resume after logging [aoSpider #438, Object doesn't support this property or method]"
+"2/26/2014 8:01:18 AM","aoSpider.SpiderForm.SpiderLink_GetDoc getting URL [HTTP://test19/index.php] Unexpected ErrorTrap, will resume after logging [kmaHTTP3 #91, kmahttp3.HTTPClass.GetURLToFile encountered a trap error: Object variable or With block variable not set]"
+"2/26/2014 8:46:55 AM","aoSpider.SpiderForm.SpiderLink_GetDoc getting URL [HTTP://test19/index.php] Unexpected ErrorTrap, will resume after logging [aoSpider #438, Object doesn't support this property or method]"

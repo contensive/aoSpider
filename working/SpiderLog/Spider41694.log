@@ -1,2 +1,4 @@
 "2/24/2014 8:14:29 AM","SpiderClass.SpiderLink","Document [HTTP://test19/index.php] fetched, http status [HTTP/1.1 200 OK], 11873 characters found"
 "2/24/2014 8:19:03 AM","SpiderClass.SpiderLink","Document [http://www.contensive.com/] fetched, http status [HTTP/1.1 200 OK], 21379 characters found"
+"2/24/2014 6:39:42 PM","SpiderClass.SpiderLink","Error, Link [HTTP://test19/go] fetched but no response or connection error, socket response [error requesting document, Object doesn't support this property or method]"
+"2/24/2014 6:43:35 PM","SpiderClass.SpiderLink","Error, Link [HTTP://test19/Home] fetched but no response or connection error, socket response [error requesting document, Object doesn't support this property or method]"
