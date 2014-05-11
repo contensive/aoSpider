@@ -39,9 +39,9 @@ Public Type RobotPathType
     End Type
 '
 Public Type docType
-    id As Long                          ' ID in database for this doc record
+    Id As Long                          ' ID in database for this doc record
                                         ' Initialize before socket call
-    url As String                       ' <scheme>://<user>:<Password>@<host>:<Port>/<url-path>?<Query>
+    URL As String                       ' <scheme>://<user>:<Password>@<host>:<Port>/<url-path>?<Query>
     urlHost As String                   '
     urlPath As String                   '
     urlPage As String                   '

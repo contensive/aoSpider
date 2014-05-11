@@ -210,6 +210,7 @@ Private SpiderWordHitSupport As Boolean
 Public Function Execute(csvObj As Object, MainObject As Object, OptionString As String, FilterInput As String) As String
     On Error GoTo ErrorTrap
     '
+    DebugMode = True
     Set csv = csvObj
     Call Upgrade(csv)
     Call SpiderSite
@@ -850,6 +851,8 @@ ErrorTrap:
 Private Sub SpiderLink_GetDoc(dataBuildVersion As String, targetDoc As docType)
     On Error GoTo ErrorTrap
     '
+Dim URLWorking As String
+Dim test As String
     Dim LineEnd As Long
     Dim ModifiedHeaderEnd As Long
     Dim LineStart As Long
@@ -878,6 +881,9 @@ Private Sub SpiderLink_GetDoc(dataBuildVersion As String, targetDoc As docType)
     Dim CSVisit As Long
     Dim CSMember As Long
     Dim VisitMemberID As Long
+    Dim socketErr As Long
+    Dim socketErrSource As String
+    Dim socketErrDescription As String
     '
     Call PrintDebugMessage("Requesting document from server [" & targetDoc.URL & "]")
     '
@@ -1110,10 +1116,9 @@ Dim UserAgent As String
     HTTPResponseTickCountStart = GetTickCount
     '
     HTTPInProcess = True
-    Call PrintDebugMessage
-Dim URLWorking As String
+    'Call PrintDebugMessage
     URLWorking = kmaEncodeURL(targetDoc.URL)
-    On Error Resume Next
+    'On Error Resume Next
     If InStr(1, URLWorking, ".pdf", vbTextCompare) <> 0 Then
         URLWorking = URLWorking
     End If
@@ -1121,8 +1126,11 @@ Dim URLWorking As String
     If Left(LCase(URLWorking), 8) = "https://" Then
         UseXml = True
     End If
-Dim test As String
+    socketErr = 0
+    socketErrSource = ""
+    socketErrDescription = ""
     If UseXml Then
+        hint = "Getting Document, useXml"
         '
         ' Use the XML object
         '
@@ -1140,26 +1148,58 @@ Dim test As String
         End If
         Call xmlhttp.SetRequestHeader("User-Agent", UserAgent)
         Call xmlhttp.SetRequestHeader("Accept-Language", "any")
+        '
+        Err.Clear
+        On Error Resume Next
         Call xmlhttp.Send
-        
+        socketErr = Err.Number
+        socketErrSource = Err.Source
+        socketErrDescription = Err.Description
+        Err.Clear
+        On Error GoTo ErrorTrap
+        '
         Call csv.SaveFile(PhysicalFilePath & HTTPResponseFilename, xmlhttp.ResponseText)
     Else
+        hint = "Getting Document, not useXml"
         '
         ' Use the IPWorks http object
         '
+        hint = hint & ",1"
         kmaHTTP.UserAgent = UserAgent
         'kmaHTTP.HTTP1.OtherHeaders = "Accept-Language: any" & vbCrLf
+        hint = hint & ",2"
         If (kmaEncodeBoolean(InStr(1, targetDoc.URL, RootPathLink, vbTextCompare))) And (HTTPAuthUsername <> "") Then
+            hint = hint & ",3"
             kmaHTTP.Username = HTTPAuthUsername
+            hint = hint & ",4"
             kmaHTTP.Password = HTTPAuthPassword
         End If
+        hint = hint & ",5"
         If CookieString <> "" Then
+            hint = hint & ",6"
+            On Error Resume Next
             kmaHTTP.SetCookie = CookieString
+            If Err.Number <> 0 Then
+                Call AppendSpiderLog("SpiderLink_GetDoc", "ERROR setting kmaHttp cookie - may not be supported yet.")
+            End If
+            Err.Clear
+            On Error GoTo ErrorTrap
         End If
+        '
+        hint = hint & ",7"
+        Err.Clear
+        On Error Resume Next
+        Call AppendSpiderLog("SpiderLink_GetDoc", "fetching [" & URLWorking & "]+[" & PhysicalFilePath & HTTPResponseFilename & "]")
         Call kmaHTTP.GetURLToFile(URLWorking, PhysicalFilePath & HTTPResponseFilename)
+        socketErr = Err.Number
+        socketErrSource = Err.Source
+        socketErrDescription = Err.Description
+        Err.Clear
+        On Error GoTo ErrorTrap
     End If
-    If Err.Number <> 0 Then
-        Select Case Err.Number
+    hint = hint & ", done"
+    If socketErr <> 0 Then
+        Select Case socketErr
             Case 10060
                 'HTTPResponseHeader = "Socket Error"
                 SocketResponse = "timeout waiting for server"
@@ -1179,7 +1219,7 @@ Dim test As String
                 'HTTPResponseHeader = "Socket Error"
                 SocketResponse = "error requesting document, " & Err.Description
             End Select
-            Call HandleError("SpiderForm", "SpiderLink_GetDoc getting URL [" & targetDoc.URL & "]", Err.Number, Err.Source, Err.Description, True, True)
+        Call HandleError("SpiderForm", "SpiderLink_GetDoc getting URL [" & targetDoc.URL & "], hint=[" & hint & "]", socketErr, socketErrSource, socketErrDescription, True, True)
     Else
         If UseXml Then
             SocketResponse = ""
@@ -1218,7 +1258,7 @@ Dim test As String
 ErrorTrap:
     Set kmaHTTP = Nothing
     Call HandleSpiderError("SpiderLink_GetDoc (Hint=" & hint & ") getting URL [" & targetDoc.URL & "]", True)
-    End Sub
+End Sub
 
 ''
 ''==========================================================================================
