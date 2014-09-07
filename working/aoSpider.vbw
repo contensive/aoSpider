@@ -1,9 +1,9 @@
 SpiderControlClass = 92, 92, 922, 615, 
 SpiderModule = 46, 46, 798, 569, 
-SpiderDocRptClass = 0, 0, 0, 0, C
+SpiderDocRptClass = 154, 154, 1695, 810, 
 ErrorRptClass = 69, 69, 899, 592, 
 SpiderProcessClass = 23, 23, 700, 546, Z
-PrivateDecodeClass = 0, 0, 0, 0, C
-PrivateParseClass = 0, 0, 0, 0, C
+PrivateDecodeClass = 176, 176, 1717, 832, 
+PrivateParseClass = 198, 198, 1739, 854, 
 ccCommonModule = 170, 170, 1475, 792, 
 kmaCommonModule = 132, 132, 1242, 788, 

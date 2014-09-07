@@ -2,6 +2,8 @@ Attribute VB_Name = "SpiderModule"
 
 Option Explicit
 '
+Public Const spSpiderEmailOnPageError = "spiderEmailOnPageError"
+'
 ' Doc Errors
 '
 'Public Const DocErrorUnknown = 1000
@@ -84,5 +86,6 @@ Public Sub HandleSpiderError(MethodName As String, Optional ResumeNext As Boolea
     Call HandleError("SpiderForm", MethodName, Err.Number, Err.Source, Err.Description, True, ResumeNext)
     ' ##### added the error clear so if a resume next is included, the error is cleared before returning
     Err.Clear
-    End Sub
+End Sub
+
 

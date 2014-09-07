@@ -102,10 +102,10 @@ Public Function GetContent(OptionString As String) As String
     '
     SQL = "select count(id) as RecordCount from ccSpiderDocs where active<>0"
     CS = Main.OpenCSSQL("default", SQL)
-    If Main.IsCSOK(CS) Then
-        DataRowCount = Main.GetCSInteger(CS, "RecordCount")
+    If Main.iscsok(CS) Then
+        DataRowCount = Main.getcsinteger(CS, "RecordCount")
         End If
-    Call Main.CloseCS(CS)
+    Call Main.closecs(CS)
     '
     '   Get data docs
     '
@@ -113,7 +113,7 @@ Public Function GetContent(OptionString As String) As String
     CS = Main.OpenCSSQL("default", SQL, PageSize, PageNumber)
     RowPointer = 0
     RowBAse = (PageSize * (PageNumber - 1))
-    Do While Main.IsCSOK(CS) And (RowPointer < PageSize)
+    Do While Main.iscsok(CS) And (RowPointer < PageSize)
         '
         ' LastRefresh
         '
@@ -129,7 +129,7 @@ Public Function GetContent(OptionString As String) As String
         '
         WorkingQuery = RQS
         WorkingQuery = ModifyQueryString(WorkingQuery, "addonid", "", False)
-        WorkingQuery = ModifyQueryString(WorkingQuery, "RecordID", Main.GetCSInteger(CS, "ID"))
+        WorkingQuery = ModifyQueryString(WorkingQuery, "RecordID", Main.getcsinteger(CS, "ID"))
         WorkingQuery = ModifyQueryString(WorkingQuery, RequestNameReportForm, ReportFormSpiderDocDetails)
         Cells(RowPointer, 1) = Reports.GetLink(Main, Main.GetCSText(CS, "Link"), WorkingQuery, True, , , True)
         '
@@ -158,7 +158,7 @@ Public Function GetContent(OptionString As String) As String
         Main.NextCSRecord (CS)
         RowPointer = RowPointer + 1
         Loop
-    Call Main.CloseCS(CS)
+    Call Main.closecs(CS)
     '
     ' Generate Table
     '
