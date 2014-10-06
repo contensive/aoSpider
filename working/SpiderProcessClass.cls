@@ -268,6 +268,7 @@ Private Sub SpiderSite()
     Dim Link As String
     Dim SpiderRefreshPeriod As Double
     Dim DomainSplit() As String
+    Dim managingApplication As String
     '
     GlobalApplicationName = csv.ApplicationNameLocal
     AllowContentSpider = kmaEncodeBoolean(csv.GetSiteProperty("AllowContentSpider", "", 0))
@@ -284,11 +285,11 @@ Private Sub SpiderSite()
                 LanguageAnyID = csv.GetRecordID("Languages", "Any")
                 If LanguageAnyID = 0 Then
                     CS = csv.InsertCSRecord("Languages", 0)
-                    If csv.iscsok(CS) Then
-                        LanguageAnyID = csv.getcsinteger(CS, "ID")
+                    If csv.IsCSOK(CS) Then
+                        LanguageAnyID = csv.GetCSInteger(CS, "ID")
                         Call csv.SetCS(CS, "name", "Any")
                     End If
-                    Call csv.closecs(CS)
+                    Call csv.CloseCS(CS)
                 End If
             End If
             DomainNameList = csv.DomainName
@@ -357,7 +358,7 @@ Private Sub SpiderSite()
                 updatedDocId = 0
                 Criteria = "(UpTodate=0)or(LastRefreshDate is null)or(LastRefreshDate<" & KmaEncodeSQLDate(Now - SpiderRefreshPeriod) & ")"
                 CSDocs = csv.OpenCSContent("Spider Docs", Criteria, "UpToDate,LastRefreshDate")
-                If csv.iscsok(CSDocs) Then
+                If csv.IsCSOK(CSDocs) Then
                     '
                     ' ----- Delete all Links from Docs that have been deleted
                     '
@@ -417,8 +418,8 @@ Private Sub SpiderSite()
                         '
                         SQL = "Select Distinct ccSpiderDocBody.DocID from ccSpiderDocBody left join ccSpiderDocs on ccSpiderDocBody.DocID=ccSpiderDocs.ID where ccSpiderDocs.ID is null;"
                         CS = csv.OpenCSSQL("Default", SQL, 0)
-                        Do While csv.iscsok(CS) And (RowPointer < 10)
-                            Call csv.ExecuteSQL("Default", "delete from ccSpiderDocBody where DocID=" & csv.getcsinteger(CS, "DocID"))
+                        Do While csv.IsCSOK(CS) And (RowPointer < 10)
+                            Call csv.ExecuteSQL("Default", "delete from ccSpiderDocBody where DocID=" & csv.GetCSInteger(CS, "DocID"))
                             Call csv.NextCSRecord(CS)
                             RowPointer = RowPointer + 1
                         Loop
@@ -457,27 +458,33 @@ Private Sub SpiderSite()
                     'CSDocs = CSv.OpenCSContent("Spider Docs", "(LastRefreshDate is null)or(LastRefreshDate>" & CSv.encodesqldate(Now - 1) & ")", "UpToDate,LastRefreshDate")
                     LoopCount = 0
                     
-                    Do While (csv.iscsok(CSDocs)) And (Not AbortProcess) And (LoopCount < 100)
+                    Do While (csv.IsCSOK(CSDocs)) And (Not AbortProcess) And (LoopCount < 100)
                         '
                         ' skip and delete the doc if it has no in-links or it is not a seed
                         '
-                        LinkOK = IsSeedLink(csv.GetCSText(CSDocs, "Link"))
-                        If LinkOK Then
+                        managingApplication = csv.GetCSText(CSDocs, "managingApplication")
+                        LinkOK = True
+                        If managingApplication <> "" Then
                             '
-                            ' seed link, never delete
+                            ' this doc is managed by another program -- spider just checks it, another app adds and removes it
                             '
-                            targetDoc.Id = targetDoc.Id
                         Else
                             '
-                            ' if not a seed link, test for an inbound link
+                            ' This doc is managed by the spider -- (the spider adds and removes it)
                             '
-                            targetDoc.Id = csv.getcsinteger(CSDocs, "ID")
-                            CSLinks = csv.OpenCSContent("Spider Links", "ToDocID=" & targetDoc.Id, "ID")
-                            LinkOK = csv.iscsok(CSLinks)
-                            Call csv.closecs(CSLinks)
-                        End If
-                        If LinkOK Then
-                            LinkOK = Not IsExcludedURL(csv.GetCSText(CSDocs, "Link"))
+                            If Not IsSeedLink(csv.GetCSText(CSDocs, "Link")) Then
+                                '
+                                ' if not a seed link, test for an inbound link
+                                '
+                                targetDoc.Id = csv.GetCSInteger(CSDocs, "ID")
+                                CSLinks = csv.OpenCSContent("Spider Links", "ToDocID=" & targetDoc.Id, "ID")
+                                LinkOK = csv.IsCSOK(CSLinks)
+                                Call csv.CloseCS(CSLinks)
+                            End If
+                            '
+                            ' if in exclude list, remove doc
+                            '
+                            LinkOK = LinkOK And Not IsExcludedURL(csv.GetCSText(CSDocs, "Link"))
                         End If
                         If LinkOK Then
                             '
@@ -491,8 +498,8 @@ Private Sub SpiderSite()
                             '
                             targetDoc = targetDocEmpty
                             Call SpiderLink(CSDocs, targetDoc, AllowLanguageSupport, LanguageAnyID, dataBuildVersion)
-                            updatedDocId = csv.getcsinteger(CSDocs, "id")
-                            updatedDocPageId = csv.getcsinteger(CSDocs, "pageid")
+                            updatedDocId = csv.GetCSInteger(CSDocs, "id")
+                            updatedDocPageId = csv.GetCSInteger(CSDocs, "pageid")
                             updatedDocName = csv.GetCSText(CSDocs, "name")
                             Exit Do
                         Else
@@ -511,7 +518,7 @@ Private Sub SpiderSite()
                         ' process aborted
                         '
                         Call PrintDebugMessage("Process aborted")
-                    ElseIf (Not csv.iscsok(CSDocs)) Then
+                    ElseIf (Not csv.IsCSOK(CSDocs)) Then
                         '
                         ' not found or abort
                         '
@@ -519,7 +526,7 @@ Private Sub SpiderSite()
                     End If
                     'Call Csv.closecs(CSDocs)
                 End If
-                Call csv.closecs(CSDocs)
+                Call csv.CloseCS(CSDocs)
                 If (updatedDocPageId <> 0) And (updatedDocId <> 0) Then
                     '
                     ' found a page on this site, upate duplicatecontent marked for all page id + page title matches,
@@ -591,7 +598,7 @@ Private Sub SpiderLink(CSDocs As Long, targetDoc As docType, AllowLanguageSuppor
     Dim TargetDoctest As docType
     '
     Call SpiderLink_InitLocalStorage(targetDoc)
-    targetDoc.Id = csv.getcsinteger(CSDocs, "ID")
+    targetDoc.Id = csv.GetCSInteger(CSDocs, "ID")
     Link = csv.GetCSText(CSDocs, "LINK")
     '
     'TargetDoctest.ID = targetdoc.id
@@ -731,17 +738,17 @@ Dim LoopCnt As Long
                 Do While (LoopCnt < 10) And (SectionID = 0) And (lookupParentID <> 0) And (InStr(1, "," & CStr(lookupPageID) & ",", "," & CStr(usedPageIdList) & ",") = 0)
                     lookupParentID = 0
                     csTest = csv.OpenCSSQL("", "select id from ccsections where rootpageid=" & lookupPageID, 0)
-                    If csv.iscsok(csTest) Then
-                        SectionID = csv.getcsinteger(csTest, "id")
+                    If csv.IsCSOK(csTest) Then
+                        SectionID = csv.GetCSInteger(csTest, "id")
                     End If
-                    Call csv.closecs(csTest)
+                    Call csv.CloseCS(csTest)
                     If SectionID = 0 Then
                         usedPageIdList = usedPageIdList & "," & lookupPageID
                         csTest = csv.OpenCSSQL("", "select parentid from ccpagecontent where id=" & lookupPageID, 0)
-                        If csv.iscsok(csTest) Then
-                            lookupParentID = csv.getcsinteger(csTest, "ParentID")
+                        If csv.IsCSOK(csTest) Then
+                            lookupParentID = csv.GetCSInteger(csTest, "ParentID")
                         End If
-                        Call csv.closecs(csTest)
+                        Call csv.CloseCS(csTest)
                     End If
                     LoopCnt = LoopCnt + 1
                 Loop
@@ -906,13 +913,13 @@ Dim test As String
     hint = "Loading cookies"
     CookieMatchCount = 0
     CSPointer = csv.OpenCSContent("Spider Cookies", "(Domain=" & KmaEncodeSQLText(UCase(targetDoc.urlHost)) & ")", "ID")
-    If Not csv.iscsok(CSPointer) Then
+    If Not csv.IsCSOK(CSPointer) Then
         Call PrintDebugMessage("No cookie found for this domain.")
     Else
         '
         ' put loop here
         '
-        Do While csv.iscsok(CSPointer)
+        Do While csv.IsCSOK(CSPointer)
             CookieDomain = csv.GetCSText(CSPointer, "Domain")
             CookieExpires = csv.GetCSText(CSPointer, "Expires")
             CookieName = csv.GetCSText(CSPointer, "name")
@@ -929,14 +936,14 @@ Dim test As String
                 '
                 If Int(Now) <> Int(CookieDateAdded) Then
                     CookieGood = False
-                    Call csv.DeleteContentRecord("Spider Cookies", csv.getcsinteger(CSPointer, "ID"))
+                    Call csv.DeleteContentRecord("Spider Cookies", csv.GetCSInteger(CSPointer, "ID"))
                     Call PrintDebugMessage("non-Persistant cookie has expired (every midnight), deleted.")
                     End If
             Else
                 If IsDate(CookieExpires) Then
                     If CDate(CookieExpires) < Now() Then
                         CookieGood = False
-                        Call csv.DeleteContentRecord("Spider Cookies", csv.getcsinteger(CSPointer, "ID"))
+                        Call csv.DeleteContentRecord("Spider Cookies", csv.GetCSInteger(CSPointer, "ID"))
                         Call PrintDebugMessage("Persistant cookie has expired (expire date < now), deleted.")
                         End If
                     End If
@@ -969,8 +976,8 @@ Dim test As String
                     Call PrintDebugMessage("Pre-Authentication, visitID cookie decode returned 0")
                 Else
                     hint = "decoded HttpRequestCookieVisitID<>0, opening visit table"
-                    CSVisit = csv.opencscontentrecord("Visits", HttpRequestCookieVisitID)
-                    If Not csv.iscsok(CSVisit) Then
+                    CSVisit = csv.OpenCSContentRecord("Visits", HttpRequestCookieVisitID)
+                    If Not csv.IsCSOK(CSVisit) Then
                         '
                         ' Could not find the visit, bad cookie
                         '
@@ -981,11 +988,11 @@ Dim test As String
                         ' get the any language ID
                         '
                         CSLanguage = csv.OpenCSContent("Languages", "name='any'", , , , , , "ID")
-                        If csv.iscsok(CSLanguage) Then
-                            AnyLanguageID = csv.getcsinteger(CSLanguage, "ID")
+                        If csv.IsCSOK(CSLanguage) Then
+                            AnyLanguageID = csv.GetCSInteger(CSLanguage, "ID")
                         End If
-                        Call csv.closecs(CSLanguage)
-                        VisitMemberID = csv.getcsinteger(CSVisit, "MemberID")
+                        Call csv.CloseCS(CSLanguage)
+                        VisitMemberID = csv.GetCSInteger(CSVisit, "MemberID")
                         '
                         ' Open member, set language to Any, set memberid in visit, and set visit authenticated
                         '
@@ -996,7 +1003,7 @@ Dim test As String
                             '
                             CSMember = csv.OpenCSContent("People", "((username=" & KmaEncodeSQLText(ContensiveUsername) & ")and(password=" & KmaEncodeSQLText(ContensivePassword) & "))")
                             'CSMember = CSv.OpenCSContent("People", "((username=" & KmaEncodeSQLText(ContensiveUsername) & ")and(password=" & KmaEncodeSQLText(ContensivePassword) & "))", , , , , , "ID,LanguageID,Admin,Developer,VisitAuthenticated")
-                            If Not csv.iscsok(CSMember) Then
+                            If Not csv.IsCSOK(CSMember) Then
                                 '
                                 ' This is an error -- the username/password were given, but not found
                                 '
@@ -1010,7 +1017,7 @@ Dim test As String
                                 Call csv.SetCSField(CSMember, "Developer", False)
                                 Call csv.SetCSField(CSMember, "LanguageID", AnyLanguageID)
                                 '
-                                Call csv.SetCSField(CSVisit, "MemberID", csv.getcsinteger(CSMember, "ID"))
+                                Call csv.SetCSField(CSVisit, "MemberID", csv.GetCSInteger(CSMember, "ID"))
                                 Call csv.SetCSField(CSVisit, "VisitAuthenticated", True)
                                 '
                                 If dataBuildVersion > "3.4.209" Then
@@ -1019,13 +1026,13 @@ Dim test As String
                                 End If
 
                             End If
-                            Call csv.closecs(CSMember)
+                            Call csv.CloseCS(CSMember)
                         Else
                             '
                             ' No Authentication Required
                             '
-                            CSMember = csv.opencscontentrecord("People", VisitMemberID)
-                            If Not csv.iscsok(CSMember) Then
+                            CSMember = csv.OpenCSContentRecord("People", VisitMemberID)
+                            If Not csv.IsCSOK(CSMember) Then
                                 '
                                 ' visitmember could not be found, log it in the trace log
                                 '
@@ -1050,10 +1057,10 @@ Dim test As String
                                     Call csv.SetCSField(CSVisit, "ExcludeFromAnalytics", True)
                                 End If
                             End If
-                            Call csv.closecs(CSMember)
+                            Call csv.CloseCS(CSMember)
                         End If
                     End If
-                    Call csv.closecs(CSVisit)
+                    Call csv.CloseCS(CSVisit)
                     'CSVisit = CSv.OpenCSContentRecord("Visits", HttpRequestCookieVisitID)
                     'Call CSv.CloseCS(CSVisit)
                 End If
@@ -1090,7 +1097,7 @@ Dim test As String
             Call Sleep(100)
             Loop
         End If
-    Call csv.closecs(CSPointer)
+    Call csv.CloseCS(CSPointer)
     '
     ' Set cookies found into header
     '
@@ -2442,12 +2449,12 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
     ' ----- Find Spider Doc, if can not find it, add it
     '
     CSPointer = csv.OpenCSContent("Spider Docs", "link=" & KmaEncodeSQLText(PathPage), "ID")
-    If csv.iscsok(CSPointer) Then
+    If csv.IsCSOK(CSPointer) Then
         AddMessage = AddMessage & ", ToDoc was found, ID="
     Else
-        Call csv.closecs(CSPointer)
+        Call csv.CloseCS(CSPointer)
         CSPointer = csv.InsertCSRecord("Spider Docs", 0)
-        If csv.iscsok(CSPointer) Then
+        If csv.IsCSOK(CSPointer) Then
             Call csv.SetCS(CSPointer, "Link", PathPage)
             Call csv.SetCS(CSPointer, "Active", True)
             Call csv.SetCS(CSPointer, "UpToDate", False)
@@ -2455,9 +2462,9 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
             End If
         AddMessage = AddMessage & ", ToDoc was added, ID="
         End If
-    ToDocID = csv.getcsinteger(CSPointer, "ID")
+    ToDocID = csv.GetCSInteger(CSPointer, "ID")
     AddMessage = AddMessage & ToDocID
-    Call csv.closecs(CSPointer)
+    Call csv.CloseCS(CSPointer)
     '
     ' ----- set outgoing SpiderLink
     '
@@ -2465,13 +2472,13 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
         targetDoc.Id = targetDoc.Id
     Else
         CSPointer = csv.OpenCSContent("Spider Links", "(FromDocID=" & targetDoc.Id & ")AND(ToDocID=" & ToDocID & ")", , False)
-        If Not csv.iscsok(CSPointer) Then
+        If Not csv.IsCSOK(CSPointer) Then
             '
             ' No Link found, create one
             '
-            Call csv.closecs(CSPointer)
+            Call csv.CloseCS(CSPointer)
             CSPointer = csv.InsertCSRecord("Spider Links", 0)
-            If csv.iscsok(CSPointer) Then
+            If csv.IsCSOK(CSPointer) Then
                 Call csv.SetCS(CSPointer, "Active", True)
                 Call csv.SetCS(CSPointer, "FromDocID", targetDoc.Id)
                 Call csv.SetCS(CSPointer, "ToDocID", ToDocID)
@@ -2482,7 +2489,7 @@ Private Sub SpiderLink_AnalyzeDoc_AddLink(URI As String, IsLinkToDocument As Boo
             '
             Call csv.SetCS(CSPointer, "Active", True)
         End If
-        Call csv.closecs(CSPointer)
+        Call csv.CloseCS(CSPointer)
         AddMessage = AddMessage & ", spiderlink added FromDocid=" & targetDoc.Id & ", ToDocID=" & ToDocID
     End If
     '
@@ -2533,7 +2540,7 @@ Private Sub AddSpiderError(Code As String, IsWarning As Boolean, Cause As String
     ' Add Error to the database
     '
     CSPointer = csv.InsertCSRecord("Spider Errors", 0)
-    If csv.iscsok(CSPointer) Then
+    If csv.IsCSOK(CSPointer) Then
         Call csv.SetCS(CSPointer, "active", True)
         Call csv.SetCS(CSPointer, "Name", Code)
         Call csv.SetCS(CSPointer, "DocID", targetDoc.Id)
@@ -2542,7 +2549,7 @@ Private Sub AddSpiderError(Code As String, IsWarning As Boolean, Cause As String
         Call csv.SetCS(CSPointer, "Cause", Cause)
         Call csv.SetCS(CSPointer, "IsWarning", IsWarning)
     End If
-    Call csv.closecs(CSPointer)
+    Call csv.CloseCS(CSPointer)
     '
     ' Add Site Warning
     '
@@ -2569,28 +2576,28 @@ Dim emailBody As String
                 ' 404 on the target doc, send the error to all pages linked to this doc
                 '
                 CSPointer = csv.OpenCSContent("spider links", "toDocId=" & targetDoc.Id)
-                If csv.iscsok(CSPointer) Then
-                    fromDocId = csv.getcsinteger(CSPointer, "fromDocId")
+                If csv.IsCSOK(CSPointer) Then
+                    fromDocId = csv.GetCSInteger(CSPointer, "fromDocId")
                 End If
-                Call csv.closecs(CSPointer)
+                Call csv.CloseCS(CSPointer)
                 '
                 CSPointer = csv.OpenCSContent("spider docs", "id=" & fromDocId)
-                If csv.iscsok(CSPointer) Then
-                    pageId = csv.getcsinteger(CSPointer, "pageId")
+                If csv.IsCSOK(CSPointer) Then
+                    pageId = csv.GetCSInteger(CSPointer, "pageId")
                 End If
-                Call csv.closecs(CSPointer)
+                Call csv.CloseCS(CSPointer)
                 If pageId <> 0 Then
                     CSPointer = csv.OpenCSContent("page content", "id=" & pageId)
-                    If csv.iscsok(CSPointer) Then
-                        userContactId = csv.getcsinteger(CSPointer, "ContactMemberID")
+                    If csv.IsCSOK(CSPointer) Then
+                        userContactId = csv.GetCSInteger(CSPointer, "ContactMemberID")
                         If userContactId = 0 Then
-                            userContactId = csv.getcsinteger(CSPointer, "CreatedBy")
+                            userContactId = csv.GetCSInteger(CSPointer, "CreatedBy")
                             If userContactId = 0 Then
-                                userContactId = csv.getcsinteger(CSPointer, "ModifiedBy")
+                                userContactId = csv.GetCSInteger(CSPointer, "ModifiedBy")
                             End If
                         End If
                     End If
-                    Call csv.closecs(CSPointer)
+                    Call csv.CloseCS(CSPointer)
                     If (userContactId <> 0) Then
                         '
                         emailFrom = csv.GetSiteProperty("EMAILFROMADDRESS", "", 0)
@@ -3058,7 +3065,7 @@ Private Sub SpiderLink_AnalyzeDoc_Parseheader_ProcessCookie(CookieBuffer As Stri
             ' Search for this cookie in collection (modify, not add)
             '
             CSPointer = csv.OpenCSContent("Spider Cookies", "(Domain=" & KmaEncodeSQLText(CookieDomain) & ")AND(Path=" & KmaEncodeSQLText(CookiePath) & ")AND(Name=" & KmaEncodeSQLText(CookieName) & ")", "ID")
-            If csv.iscsok(CSPointer) Then
+            If csv.IsCSOK(CSPointer) Then
                 '
                 ' ----- modify cookie
                 '
@@ -3068,9 +3075,9 @@ Private Sub SpiderLink_AnalyzeDoc_Parseheader_ProcessCookie(CookieBuffer As Stri
                 '
                 ' ----- create new cookie
                 '
-                Call csv.closecs(CSPointer)
+                Call csv.CloseCS(CSPointer)
                 CSPointer = csv.InsertCSRecord("Spider Cookies", 0)
-                If csv.iscsok(CSPointer) Then
+                If csv.IsCSOK(CSPointer) Then
                     Call csv.SetCS(CSPointer, "Name", CookieName)
                     Call csv.SetCS(CSPointer, "Domain", CookieDomain)
                     Call csv.SetCS(CSPointer, "Path", CookiePath)
@@ -3078,7 +3085,7 @@ Private Sub SpiderLink_AnalyzeDoc_Parseheader_ProcessCookie(CookieBuffer As Stri
                     Call csv.SetCS(CSPointer, "Expires", CookieExpires)
                     End If
                 End If
-            Call csv.closecs(CSPointer)
+            Call csv.CloseCS(CSPointer)
             '
             ' Determine visit Authenticated status
             '
@@ -3092,20 +3099,20 @@ Private Sub SpiderLink_AnalyzeDoc_Parseheader_ProcessCookie(CookieBuffer As Stri
                     '
                     ' Open the visit record
                     '
-                    CSVisit = csv.opencscontentrecord("Visits", VisitID)
-                    If csv.iscsok(CSVisit) Then
+                    CSVisit = csv.OpenCSContentRecord("Visits", VisitID)
+                    If csv.IsCSOK(CSVisit) Then
                         '
                         ' get the authenticated status
                         '
                         DocAuthenticated = csv.GetCSBoolean(CSVisit, "VisitAuthenticated")
-                        VisitMemberID = csv.getcsinteger(CSVisit, "memberid")
+                        VisitMemberID = csv.GetCSInteger(CSVisit, "memberid")
                         If dataBuildVersion > "3.4.209" Then
                             If Not csv.GetCSBoolean(CSVisit, "ExcludeFromAnalytics") Then
                                 Call csv.SetCS(CSVisit, "ExcludeFromAnalytics", True)
                             End If
                         End If
                     End If
-                    Call csv.closecs(CSVisit)
+                    Call csv.CloseCS(CSVisit)
                 End If
             End If
             '
@@ -3324,21 +3331,21 @@ Private Sub SpiderLink_AnalyzeDoc_SaveSpiderDocBody(HTMLSearchText As String, Al
             LanguageText = SpiderLink_AnalyzeDoc_SaveSpiderDocBody_GetLanguageText(HTMLSearchText, "Any")
             Criteria = "(DocID=" & targetDoc.Id & ")and(LanguageID=" & LanguageID & ")"
             CSBody = csv.OpenCSContent("Spider Doc Body", Criteria)
-            If Not csv.iscsok(CSBody) Then
-                Call csv.closecs(CSBody)
+            If Not csv.IsCSOK(CSBody) Then
+                Call csv.CloseCS(CSBody)
                 CSBody = csv.InsertCSRecord("Spider Doc Body", 0)
                 End If
-            If csv.iscsok(CSBody) Then
+            If csv.IsCSOK(CSBody) Then
                 Call csv.SetCS(CSBody, "DocID", targetDoc.Id)
                 Call csv.SetCS(CSBody, "LanguageID", LanguageAnyID)
                 Call csv.SetCS(CSBody, "BodyText", LanguageText)
             End If
-            Call csv.closecs(CSBody)
+            Call csv.CloseCS(CSBody)
         Else
             CSLanguage = csv.OpenCSContent("Languages")
-            Do While csv.iscsok(CSLanguage)
+            Do While csv.IsCSOK(CSLanguage)
                 LanguageName = csv.GetCSText(CSLanguage, "Name")
-                LanguageID = csv.getcsinteger(CSLanguage, "ID")
+                LanguageID = csv.GetCSInteger(CSLanguage, "ID")
                 LanguageText = SpiderLink_AnalyzeDoc_SaveSpiderDocBody_GetLanguageText(HTMLSearchText, LanguageName)
                 Criteria = "(DocID=" & targetDoc.Id & ")and(LanguageID=" & LanguageID & ")"
                 If LanguageText = "" Then
@@ -3351,16 +3358,16 @@ Private Sub SpiderLink_AnalyzeDoc_SaveSpiderDocBody(HTMLSearchText As String, Al
                     ' Save this language
                     '
                     CSBody = csv.OpenCSContent("Spider Doc Body", Criteria)
-                    If Not csv.iscsok(CSBody) Then
-                        Call csv.closecs(CSBody)
+                    If Not csv.IsCSOK(CSBody) Then
+                        Call csv.CloseCS(CSBody)
                         CSBody = csv.InsertCSRecord("Spider Doc Body", 0)
                         End If
-                    If csv.iscsok(CSBody) Then
+                    If csv.IsCSOK(CSBody) Then
                         Call csv.SetCS(CSBody, "DocID", targetDoc.Id)
                         Call csv.SetCS(CSBody, "LanguageID", LanguageID)
                         Call csv.SetCS(CSBody, "BodyText", LanguageText)
                     End If
-                    Call csv.closecs(CSBody)
+                    Call csv.CloseCS(CSBody)
                 End If
                 csv.NextCSRecord (CSLanguage)
             Loop
@@ -3472,20 +3479,20 @@ Private Sub SpiderSite_VerifySeed(SeedLink As String)
     Call PrintDebugMessage("Verify Seed (" & SeedLink & ")")
     '
     CS = csv.OpenCSContent("Spider Docs", "(Link=" & KmaEncodeSQLText(SeedLink) & ")", , , , , , "ID")
-    If csv.iscsok(CS) Then
-        SeedRecordID = csv.getcsinteger(CS, "ID")
-        Call csv.closecs(CS)
+    If csv.IsCSOK(CS) Then
+        SeedRecordID = csv.GetCSInteger(CS, "ID")
+        Call csv.CloseCS(CS)
     Else
         Call PrintDebugMessage("SeedLink did not found, adding it")
-        Call csv.closecs(CS)
+        Call csv.CloseCS(CS)
         CS = csv.InsertCSRecord("Spider Docs", 0)
-        If csv.iscsok(CS) Then
-            SeedRecordID = csv.getcsinteger(CS, "ID")
+        If csv.IsCSOK(CS) Then
+            SeedRecordID = csv.GetCSInteger(CS, "ID")
             Call csv.SetCS(CS, "Link", SeedLink)
             Call csv.SetCS(CS, "UpToDate", 0)
             Call csv.SetCS(CS, "LastRefreshDate", CDate(0))
             End If
-        Call csv.closecs(CS)
+        Call csv.CloseCS(CS)
 '        '
 '        ' add link to from itself so it will stick
 '        '
@@ -3598,8 +3605,8 @@ Private Function ExtractPDF(strPath As String) As String
     Set gApp = CreateObject("AcroExch.App")
     If Err.Number <> 0 Then
         If Err.Number = 429 Then
-            Call csv.setSiteProperty("SpiderPDFBodyText", "False", 0)
-            Call csv.setSiteProperty("SpiderPDFWithoutAcrobatError", Now(), 0)
+            Call csv.SetSiteProperty("SpiderPDFBodyText", "False", 0)
+            Call csv.SetSiteProperty("SpiderPDFWithoutAcrobatError", Now(), 0)
         End If
     End If
     If Not (gApp Is Nothing) Then
@@ -3799,20 +3806,20 @@ Private Sub Upgrade(csv As Object)
     version = App.Major & "." & App.Minor & "." & Format(App.Revision, "000")
     BuildVersion = csv.GetSiteProperty("spider addon version", "0.0.000", 0)
     If version > BuildVersion Then
-        Call csv.setSiteProperty("spider addon version", version, 0)
+        Call csv.SetSiteProperty("spider addon version", version, 0)
         If BuildVersion < "3.0.140" Then
             '
             ' update the exclude list
             '
             Copy = Trim(csv.GetSiteProperty("SpiderQUERYSTRINGExcludeList", QuerystringExcludeListDefault, 0))
             Copy = Copy & ",login"
-            Call csv.setSiteProperty("SpiderQuerystringExcludeList", Copy, 0)
+            Call csv.SetSiteProperty("SpiderQuerystringExcludeList", Copy, 0)
         End If
         If BuildVersion < "3.0.142" Then
             '
             ' set update period to 30 days
             '
-            Call csv.setSiteProperty("SpiderRefreshPeriod", "30", 0)
+            Call csv.SetSiteProperty("SpiderRefreshPeriod", "30", 0)
         End If
     End If
     '
@@ -3846,7 +3853,7 @@ Private Sub reportWarning(csv As Object, Name As String, Description As String, 
     internalName = Name
     badLink = targetDoc.URL
     srcLink = targetDoc.URL
-    If csv.getdatabuildversion > "4.1.430" Then
+    If csv.GetDataBuildVersion > "4.1.430" Then
         If internalName <> errorBadRequest Then
             '
             ' pass through no change
@@ -3871,43 +3878,43 @@ Private Sub reportWarning(csv As Object, Name As String, Description As String, 
                 ' get the link that failed
                 '
                 '
-                csToDoc = csv.opencscontentrecord("spider docs", targetDoc.Id)
-                If csv.iscsok(csToDoc) Then
+                csToDoc = csv.OpenCSContentRecord("spider docs", targetDoc.Id)
+                If csv.IsCSOK(csToDoc) Then
                     badLink = csv.GetCSText(csToDoc, "link")
                     newDescriptionSrc = newDescriptionSrc & " (" & badLink & ")"
                 Else
                     newDescriptionSrc = newDescriptionSrc & " (Spider Doc #" & targetDoc.Id & ")"
                 End If
-                Call csv.closecs(csToDoc)
+                Call csv.CloseCS(csToDoc)
                 '
                 CS = csv.OpenCSContent("spider links", "(toDocid=" & targetDoc.Id & ")")
-                If Not csv.iscsok(CS) Then
+                If Not csv.IsCSOK(CS) Then
                     '
                     ' 404 but the spider link not found
                     '
                     srcLink = "The page with this bad link is unknown."
                     Call reportWarning_save(csv, internalName, Description, generalKey, specificKey, shortDescription, srcLink, targetDoc.Id)
                 Else
-                    Do While csv.iscsok(CS)
+                    Do While csv.IsCSOK(CS)
                         newDescription = newDescriptionSrc
-                        fromDocId = csv.getcsinteger(CS, "fromdocid")
+                        fromDocId = csv.GetCSInteger(CS, "fromdocid")
                         srcLink = ""
                         If fromDocId <> 0 Then
-                            csFromDoc = csv.opencscontentrecord("spider docs", fromDocId)
-                            If csv.iscsok(csFromDoc) Then
+                            csFromDoc = csv.OpenCSContentRecord("spider docs", fromDocId)
+                            If csv.IsCSOK(csFromDoc) Then
                                 srcLink = csv.GetCSText(csFromDoc, "link")
                                 newDescription = newDescription & " found on page " & srcLink
                             Else
                                 srcLink = "The page with this bad link is unknown."
                                 newDescription = newDescription & " found. " & srcLink
                             End If
-                            Call csv.closecs(csFromDoc)
+                            Call csv.CloseCS(csFromDoc)
                         End If
                         Call reportWarning_save(csv, internalName, newDescription, generalKey, newDescription, newDescription, srcLink, targetDoc.Id)
                         csv.NextCSRecord (CS)
                     Loop
                 End If
-                Call csv.closecs(CS)
+                Call csv.CloseCS(CS)
             End If
         End If
     End If
@@ -3940,7 +3947,7 @@ Private Sub reportWarning_save(csv As Object, Name As String, Description As Str
     Dim hint As String
     '
     hint = "100"
-    If csv.getdatabuildversion > "4.1.430" Then
+    If csv.GetDataBuildVersion > "4.1.430" Then
 hint = "200"
         warningId = 0
         SQL = "select top 1 ID from ccSiteWarnings" _
@@ -3974,7 +3981,7 @@ hint = "500"
             ' insert new record
             '
             CS = csv.InsertCSRecord("Site Warnings", 0)
-            If csv.iscsok(CS) Then
+            If csv.IsCSOK(CS) Then
 hint = "600"
                 Call csv.SetCS(CS, "name", Name)
                 Call csv.SetCS(CS, "description", Description)
@@ -3982,7 +3989,7 @@ hint = "600"
                 Call csv.SetCS(CS, "specificKey", specificKey)
                 Call csv.SetCS(CS, "count", 1)
                 Call csv.SetCS(CS, "dateLastReported", Now)
-                If csv.getdatabuildversion > "4.1.453" Then
+                If csv.GetDataBuildVersion > "4.1.453" Then
 hint = "700"
                     Call csv.SetCS(CS, "location", location)
                     Call csv.SetCS(CS, "pageId", pageId)
@@ -3990,7 +3997,7 @@ hint = "700"
                 End If
 hint = "800"
             End If
-            Call csv.closecs(CS)
+            Call csv.CloseCS(CS)
         End If
     End If
 hint = "900"
