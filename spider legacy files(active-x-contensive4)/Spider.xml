@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<Collection name="Spider" guid="{1EC821F6-CB2B-4371-8CD8-02F6DC44521B}" system="No" updatable="Yes" blockNavigatorNode="No">
+	<HelpLink>http://support.contensive.com/spider-addon</HelpLink>
+	<Help></Help>
+	<Addon name="isAcrobatInstalled" guid="{4C86124F-6CB1-45D0-ADDD-431C7F58CB69}" type="Add-on">
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>No</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>0</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles></Styles>
+		<Scripting Language="" EntryPoint="" Timeout="5000">
+			<Code><![CDATA[function m
+dim gApp
+m = "Adobe Acrobat Reader is installed correctly on the server"
+on error resume next
+Set gApp = CreateObject("AcroExch.App")
+If Err.Number <> 0 Then
+    If Err.Number = 429 Then
+        m = "Adobe Acrobat Reader is not installed on the server."
+    else
+        m = "There was an error testing for Adobe Acrobat Reader. Please check that it is installed correctly on the server."
+    End If
+end if
+end function]]></Code>
+		</Scripting>
+	</Addon>
+	<Addon name="Spider" guid="{A5B29F03-4FEE-432F-8F34-704B7FB03560}" type="Add-on">
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID><![CDATA[aoSpider.SpiderProcessClass]]></ActiveXProgramID>
+		<DotNetClass></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>No</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>5</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles></Styles>
+		<Scripting Language="" EntryPoint="" Timeout="5000"/>
+	</Addon>
+	<Addon name="Spider Doc Report" guid="{E222CBF0-20B2-4221-93C3-03695F330C43}" type="Report">
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID><![CDATA[aoSpider.SpiderDocRptClass]]></ActiveXProgramID>
+		<DotNetClass></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink><![CDATA[http://support.contensive.com/spider-addon]]></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>Yes</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>0</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles></Styles>
+		<Scripting Language="" EntryPoint="" Timeout="5000"/>
+	</Addon>
+	<Addon name="Spider Settings" guid="{8DFEC2DA-1AC5-4B74-9BC7-8B07DBE83915}" type="Setting">
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML><![CDATA[<Form>
+		<Tab name="Status" heading="Content Spider Status" description="The current activity of the content spider">
+			<SiteProperty caption="Enabled" name="AllowContentSpider" ReadOnly="0" Type="Boolean" Selector="" Description="When checked, the content spider will periodically fetch pages from the site, check for errors and index the content"/>
+			<DbQuery caption="Last Hit" name="LastHit" Description="This is the last time the content spider fetched a page from the site">Select top 1 ModifiedDate from ccSpiderDocs order by ModifiedDate desc</DbQuery>
+			<DbQuery caption="Links Found" name="LinksFound" Description="This is the total number of links found on pages of the site.">Select count(id) from ccSpiderDocs</DbQuery>
+			<DbQuery caption="Links Unexplored" name="LinksUnexplored" Description="This is the number of links that have not yet been explored, or are believed to be changed.">Select count(id) from ccSpiderDocs where (uptodate=0)or(uptodate is null)</DbQuery>
+		</Tab>
+		<Tab name="Options" heading="Content Spider Options" description="Settings that control the content spider">
+			<SiteProperty caption="Email page owner on error" name="spiderEmailOnPageError" ReadOnly="0" Type="Boolean" Selector="" Description="While spidering, if an error is found on a page, the spider will email the page's contact with details. If the contact is not set in the page's detail tab, the last modified user or the page creator will be emailed."/>
+			<SiteProperty caption="Site Root Path" name="SPIDERAPPROOTPATH" ReadOnly="0" Type="text" Selector="" Description="The URL Path to the root directory of the website. In most cases, it is just '/'"/>
+			<SiteProperty caption="Authentication Username" name="SPIDERAUTHUSERNAME" ReadOnly="0" Type="text" Selector="" Description="If the website requires a server username and password, enter the username here. This is NOT the Contensive authentication username."/>
+			<SiteProperty caption="Authentication Password" name="SPIDERAUTHPASSWORD" ReadOnly="0" Type="text" Selector="" Description="If the website requires a server username and password, enter the password here. This is NOT the Contensive authentication password."/>
+			<SiteProperty caption="Contensive User Username" name="SPIDERUSERNAME" ReadOnly="0" Type="text" Selector="" Description="If the content spider is to index your site as seen by an anonymous user, leave this field blank. To have the content spider take on an identity, with that identity's permissions, enter the username here."/>
+			<SiteProperty caption="Contensive User Password" name="SPIDERPASSWORD" ReadOnly="0" Type="text" Selector="" Description="If the content spider is to index your site as seen by an anonymous user, leave this field blank. To have the content spider take on an identity, with that identity's permissions, enter the password here."/>
+			<SiteProperty caption="Exclude Links containing this text" name="SPIDERQUERYSTRINGEXCLUDELIST" ReadOnly="0" Type="text" Selector="" Description="A comma delimited list of strings. If any of these strings are found in a URL, that URL will not be indexed."/>
+			<SiteProperty caption="Ignore this text in links" name="SPIDERQUERYSTRINGIGNORELIST" ReadOnly="0" Type="text" Selector="" Description="A comma delimited list of strings. If any of these strings are found in the URL, they will be removed from the URL before it is fetched from the site."/>
+			<SiteProperty caption="Other Sites to Spider" name="SPIDEROTHERSITELIST" ReadOnly="0" Type="text" Selector="" Description="A comma delimited list of other URLs (not this site) to spider."/>
+			<SiteProperty caption="Days to wait before refreshing pages" name="SPIDERREFRESHPERIOD" ReadOnly="0" Type="integer" Selector="" Description="A number of days to wait before requesting a particular page from the server again. If the page is edited, it will be automatically requested."/>
+			<SiteProperty caption="Adobe Acrobat Installed" name="AdobeAcrobatInstalled" ReadOnly="false" Type="text" Selector="" EditorAddon="isAcrobatInstalled" Description="To index PDF documents, Adobe Acrobat Reader must be installed."></SiteProperty>
+			<SiteProperty caption="Index PDF Documents" name="SpiderPDFBodyText" ReadOnly="0" Type="Boolean" Selector="" Description="(Requires additional software to be installed) When enabled, the content of PDF documents will be indexed by the spider so other addons like the text search can use it. Adobe Acrobat must be installed on the server for this feature to work."/>
+			</Tab>
+</Form>]]></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>Yes</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>0</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles></Styles>
+		<Scripting Language="" EntryPoint="" Timeout="5000"/>
+	</Addon>
+	<CDef Name="Spider Cookies" Active="1" AdminOnly="1" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderCookies" ContentDataSourceName="Default" ContentTableName="ccSpiderCookies" DefaultSortMethod="By Name" DeveloperOnly="1" DropDownFieldList="NAME" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{02FB3B93-2DCD-4F8C-9DEA-881E4C8E3C7C}" >
+		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="110" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="40" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Active" active="True" AdminOnly="False" Authorable="True" Caption="Active" DeveloperOnly="False" EditSortPriority="200" FieldType="Boolean" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="SortOrder" active="True" AdminOnly="False" Authorable="False" Caption="Alpha Sort Order" DeveloperOnly="False" EditSortPriority="2000" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Expires" active="True" AdminOnly="False" Authorable="True" Caption="Expires" DeveloperOnly="False" EditSortPriority="1010" FieldType="Date" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Path" active="True" AdminOnly="False" Authorable="True" Caption="Path" DeveloperOnly="False" EditSortPriority="1020" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Domain" active="True" AdminOnly="False" Authorable="True" Caption="Domain" DeveloperOnly="False" EditSortPriority="1030" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="CookieValue" active="True" AdminOnly="False" Authorable="True" Caption="Value" DeveloperOnly="False" EditSortPriority="1040" FieldType="Text" HTMLContent="False" IndexColumn="1" IndexSortDirection="" IndexSortOrder="1" IndexWidth="60" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+	</CDef>
+	<CDef Name="Spider Docs" Active="1" AdminOnly="0" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderDocs" ContentDataSourceName="Default" ContentTableName="ccSpiderDocs" DefaultSortMethod="By Name" DeveloperOnly="0" DropDownFieldList="Link" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{8B30C8FC-FF19-45D3-B76E-B3557F85AE3D}" >
+		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="110" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="30" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The page title found when this link was fetched. If the page had no title or if there was a problem loading the page, the link is used.</HelpDefault>
+		</Field>
+		<Field Name="Active" active="True" AdminOnly="False" Authorable="False" Caption="Active" DeveloperOnly="False" EditSortPriority="200" FieldType="Boolean" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="SortOrder" active="True" AdminOnly="False" Authorable="False" Caption="Alpha Sort Order" DeveloperOnly="False" EditSortPriority="2000" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Link" active="True" AdminOnly="False" Authorable="True" Caption="Link" DeveloperOnly="False" EditSortPriority="1010" FieldType="Text" HTMLContent="False" IndexColumn="1" IndexSortDirection="" IndexSortOrder="1" IndexWidth="40" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The URL for this document. The URL most likely was found on another document.</HelpDefault>
+		</Field>
+		<Field Name="Host" active="True" AdminOnly="False" Authorable="True" Caption="Host" DeveloperOnly="False" EditSortPriority="1020" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Internal" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The domain name part of the link. Calculated when the document is fetched.</HelpDefault>
+		</Field>
+		<Field Name="Path" active="True" AdminOnly="False" Authorable="True" Caption="Path" DeveloperOnly="False" EditSortPriority="1030" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Internal" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The path part of the link. Calculated when the document is fetched.</HelpDefault>
+		</Field>
+		<Field Name="Page" active="True" AdminOnly="False" Authorable="True" Caption="Page" DeveloperOnly="False" EditSortPriority="1040" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Internal" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The page part of the link. Calculated when the document is fetched.</HelpDefault>
+		</Field>
+		<Field Name="PageID" active="True" AdminOnly="False" Authorable="True" Caption="Content Page" DeveloperOnly="False" EditSortPriority="1045" FieldType="Lookup" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Page Content" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>If this document was found on this website, this is the page content record associated with this document.</HelpDefault>
+		</Field>
+		<Field Name="SectionID" active="True" AdminOnly="False" Authorable="True" Caption="Site Section" DeveloperOnly="False" EditSortPriority="1047" FieldType="Lookup" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Site Sections" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>If this document was found on this website, this is the site section record associated with this document.</HelpDefault>
+		</Field>
+		<Field Name="UpToDate" active="True" AdminOnly="False" Authorable="True" Caption="UpToDate" DeveloperOnly="False" EditSortPriority="1050" FieldType="Boolean" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="0" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Status" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When checked, this document has been successfully fetched. When an edit is detected for the page listed as the content page, this field is cleared.</HelpDefault>
+		</Field>
+		<Field Name="QueryString" active="True" AdminOnly="False" Authorable="True" Caption="QueryString" DeveloperOnly="False" EditSortPriority="1050" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Internal" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The querystring part of the Link.</HelpDefault>
+		</Field>
+		<Field Name="SocketResponse" active="True" AdminOnly="False" Authorable="True" Caption="SocketResponse" DeveloperOnly="False" EditSortPriority="1060" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Response" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When the document is fetched, this is the http socket response.</HelpDefault>
+		</Field>
+		<Field Name="LastRefreshDate" active="True" AdminOnly="False" Authorable="True" Caption="LastRefreshDate" DeveloperOnly="False" EditSortPriority="1060" FieldType="Date" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Status" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The time and date when this document was last fetched.</HelpDefault>
+		</Field>
+		<Field Name="HTTPResponse" active="True" AdminOnly="False" Authorable="True" Caption="HTTPResponse" DeveloperOnly="False" EditSortPriority="1070" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Response" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The http status line when this document as last fetched.</HelpDefault>
+		</Field>
+		<Field Name="ResponseTime" active="True" AdminOnly="False" Authorable="True" Caption="ResponseTime" DeveloperOnly="False" EditSortPriority="1080" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Response" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The time it took to retrieve this document</HelpDefault>
+		</Field>
+		<Field Name="ContentType" active="True" AdminOnly="False" Authorable="True" Caption="Content Type" DeveloperOnly="False" EditSortPriority="1085" FieldType="Text" HTMLContent="False" IndexColumn="2" IndexSortDirection="" IndexSortOrder="2" IndexWidth="20" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Response" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The content type of the document.</HelpDefault>
+		</Field>
+		<Field Name="Length" active="True" AdminOnly="False" Authorable="True" Caption="Length" DeveloperOnly="False" EditSortPriority="1090" FieldType="Integer" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Response" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The length of the document</HelpDefault>
+		</Field>
+		<Field Name="UnknownWordList" active="True" AdminOnly="False" Authorable="True" Caption="UnknownWordList" DeveloperOnly="False" EditSortPriority="1100" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When the document is fetched, it is spell checked. This is the list of unknown words found.</HelpDefault>
+		</Field>
+		<Field Name="TextOnlyFilename" active="True" AdminOnly="False" Authorable="True" Caption="TextOnlyFilename" DeveloperOnly="False" EditSortPriority="1110" FieldType="TextFile" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>This is the text retrieved form the document. This field can be as long as necessary, but can not be text searched.</HelpDefault>
+		</Field>
+		<Field Name="BodyText" active="True" AdminOnly="False" Authorable="True" Caption="Body Text" DeveloperOnly="False" EditSortPriority="1115" FieldType="LongText" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>This is the text retrieved from the document. It has a limited size, but is text searched.</HelpDefault>
+		</Field>
+		<Field Name="PrimaryImageLink" active="True" AdminOnly="False" Authorable="True" Caption="Primary Image Link" DeveloperOnly="False" EditSortPriority="1116" FieldType="Link" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When this document was fetched, this is the first image found within the content of the page. It can be used in text search results.</HelpDefault>
+		</Field>
+		<Field Name="PrimaryImageWidth" active="True" AdminOnly="False" Authorable="True" Caption="Primary Image Width" DeveloperOnly="False" EditSortPriority="1117" FieldType="Integer" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The size of the primary image.</HelpDefault>
+		</Field>
+		<Field Name="PrimaryImageHeight" active="True" AdminOnly="False" Authorable="True" Caption="Primary Image Height" DeveloperOnly="False" EditSortPriority="1118" FieldType="Integer" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The size of the primary image.</HelpDefault>
+		</Field>
+		<Field Name="dateLastModified" active="True" AdminOnly="False" Authorable="True" Caption="LastModified" DeveloperOnly="False" EditSortPriority="1120" FieldType="Date" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Meta" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When the document was fetched, it may include information about when the content was last edited. If it does, this is that date.</HelpDefault>
+		</Field>
+		<Field Name="MetaDescription" active="True" AdminOnly="False" Authorable="True" Caption="MetaDescription" DeveloperOnly="False" EditSortPriority="1130" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Meta" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The meta description from the document when it was fetched. This can be used in the text search.</HelpDefault>
+		</Field>
+		<Field Name="MetaKeywords" active="True" AdminOnly="False" Authorable="True" Caption="MetaKeywords" DeveloperOnly="False" EditSortPriority="1140" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Meta" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>The meta keywords from the document when it was fetched. This can be used in the text search.</HelpDefault>
+		</Field>
+		<Field Name="LinkWords" active="True" AdminOnly="False" Authorable="True" Caption="Link Words" DeveloperOnly="False" EditSortPriority="1150" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="duplicateContent" active="True" AdminOnly="False" Authorable="True" Caption="Duplicate Content" DeveloperOnly="False" EditSortPriority="1000" FieldType="Boolean" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="0" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="Content" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>When checked, the spider determined that this document is a duplicate of another document already in the Spider Docs table. This should be used to block the document from displaying in the full text search.</HelpDefault>
+		</Field>
+		<Field Name="LastModified" active="True" AdminOnly="False" Authorable="False" Caption="LastModified (deprecated)" DeveloperOnly="False" EditSortPriority="1120" FieldType="Date" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="managingApplication" active="True" AdminOnly="False" Authorable="True" Caption="Managing Application" DeveloperOnly="False" EditSortPriority="2000" FieldType="Text" HTMLContent="False" IndexColumn="" IndexSortDirection="" IndexSortOrder="" IndexWidth="" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="" EditTab="Status" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="True" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" >
+			<HelpDefault>If blank, this document is controlled by the spider so it may be deleted if there are no other documents linked to this page. If not blank, the spider will fetch the document but will not delete the document if not links are found. The document must be managed by the application that adds it.The document is parsed using the same rules as any other.</HelpDefault>
+		</Field>
+	</CDef>
+	<CDef Name="Spider Errors" Active="1" AdminOnly="0" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderErrors" ContentDataSourceName="Default" ContentTableName="ccSpiderErrors" DefaultSortMethod="By Name" DeveloperOnly="0" DropDownFieldList="NAME" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{1D22CB93-76B5-4472-AF58-24F1B14C4E42}" >
+		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="1000" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="20" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Active" active="True" AdminOnly="False" Authorable="True" Caption="Active" DeveloperOnly="False" EditSortPriority="9999" FieldType="Boolean" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="SortOrder" active="True" AdminOnly="False" Authorable="False" Caption="Alpha Sort Order" DeveloperOnly="False" EditSortPriority="9999" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Cause" active="True" AdminOnly="False" Authorable="True" Caption="Cause" DeveloperOnly="False" EditSortPriority="1010" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="20" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="LineNumber" active="True" AdminOnly="False" Authorable="True" Caption="Line Number" DeveloperOnly="False" EditSortPriority="1020" FieldType="Integer" HTMLContent="False" IndexColumn="2" IndexSortDirection="" IndexSortOrder="2" IndexWidth="20" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="LinePosition" active="True" AdminOnly="False" Authorable="True" Caption="Line Position" DeveloperOnly="False" EditSortPriority="1030" FieldType="Integer" HTMLContent="False" IndexColumn="3" IndexSortDirection="" IndexSortOrder="2" IndexWidth="20" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="DocID" active="True" AdminOnly="False" Authorable="True" Caption="Document" DeveloperOnly="False" EditSortPriority="1040" FieldType="Lookup" HTMLContent="False" IndexColumn="1" IndexSortDirection="" IndexSortOrder="0" IndexWidth="50" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Spider Docs" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="IsWarning" active="True" AdminOnly="False" Authorable="True" Caption="Warning" DeveloperOnly="False" EditSortPriority="1050" FieldType="Boolean" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="0" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Code" active="False" AdminOnly="False" Authorable="False" Caption="Error Code" DeveloperOnly="False" EditSortPriority="9999" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Spider Docs" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+	</CDef>
+	<CDef Name="Spider Links" Active="1" AdminOnly="1" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderLinks" ContentDataSourceName="Default" ContentTableName="ccSpiderLinks" DefaultSortMethod="By Name" DeveloperOnly="0" DropDownFieldList="NAME" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{8A9F643E-314B-4A31-8AED-0BB0D7B3DF61}" >
+		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="110" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Active" active="True" AdminOnly="False" Authorable="True" Caption="Active" DeveloperOnly="False" EditSortPriority="200" FieldType="Boolean" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="SortOrder" active="True" AdminOnly="False" Authorable="False" Caption="Alpha Sort Order" DeveloperOnly="False" EditSortPriority="2000" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="FromDocID" active="True" AdminOnly="False" Authorable="True" Caption="From Document" DeveloperOnly="False" EditSortPriority="1010" FieldType="Lookup" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="50" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Spider Docs" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="ToDocID" active="True" AdminOnly="False" Authorable="True" Caption="To Document" DeveloperOnly="False" EditSortPriority="1020" FieldType="Lookup" HTMLContent="False" IndexColumn="1" IndexSortDirection="" IndexSortOrder="1" IndexWidth="50" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Spider Docs" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+	</CDef>
+	<CDef Name="Spider Doc Body" Active="1" AdminOnly="0" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderDocBody" ContentDataSourceName="Default" ContentTableName="ccSpiderDocBody" DefaultSortMethod="By Name" DeveloperOnly="1" DropDownFieldList="Link" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{F33F1334-A7FC-45F7-B4DD-12AA2D90BAF3}" >
+		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="110" FieldType="Text" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="Active" active="True" AdminOnly="False" Authorable="True" Caption="Active" DeveloperOnly="False" EditSortPriority="200" FieldType="Boolean" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="SortOrder" active="True" AdminOnly="False" Authorable="False" Caption="Alpha Sort Order" DeveloperOnly="False" EditSortPriority="2000" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="0" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="DocID" active="True" AdminOnly="False" Authorable="True" Caption="Document" DeveloperOnly="False" EditSortPriority="1010" FieldType="Lookup" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="50" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Spider Docs" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="LanguageID" active="True" AdminOnly="False" Authorable="True" Caption="Language" DeveloperOnly="False" EditSortPriority="1020" FieldType="Lookup" HTMLContent="False" IndexColumn="1" IndexSortDirection="" IndexSortOrder="0" IndexWidth="50" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="Languages" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+		<Field Name="BodyText" active="True" AdminOnly="False" Authorable="True" Caption="Body Text" DeveloperOnly="False" EditSortPriority="1030" FieldType="HTML" HTMLContent="True" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="True" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
+	</CDef>
+	<Resource name="aospider.dll" type="executable" path="" />
+
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+<SQLIndex IndexName="ccSpiderDocsToDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="ToDocID"/>
+<SQLIndex IndexName="ccSpiderDocsFromDocID" DataSourceName="Default" TableName="ccSpiderLinks" FieldNameList="FromDocID"/>
+</Collection>

@@ -161,3 +161,7 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+Spider/.vs/Spider/v15/Server/sqlite3/storage.ide-wal
+Spider/.vs/Spider/v15/Server/sqlite3/storage.ide-shm
+Spider/.vs/Spider/v15/Server/sqlite3/storage.ide
+Spider/.vs/Spider/v15/Server/sqlite3/db.lock
