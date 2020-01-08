@@ -76,13 +76,13 @@ end function]]></Code>
 		<Template>No</Template>
 		<Email>No</Email>
 		<Admin>No</Admin>
-		<OnPageEndEvent>Yes</OnPageEndEvent>
+		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
-		<OnBodyEnd>No</OnBodyEnd>
+		<OnBodyEnd>Yes</OnBodyEnd>
 		<RemoteMethod>No</RemoteMethod>
 		<ProcessRunOnce>No</ProcessRunOnce>
-		<ProcessInterval>5</ProcessInterval>
+		<ProcessInterval></ProcessInterval>
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles></Styles>
