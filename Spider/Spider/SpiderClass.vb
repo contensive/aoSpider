@@ -16,7 +16,6 @@ Public Class SpiderClass
             For Each link In links
                 If (Not String.IsNullOrEmpty(link.name)) Then
                     currentLink = link.name
-                    CP.Site.ErrorReport(link.name)
                     Dim pageid As Integer = link.pageid
                     Dim blocked As Boolean = False
                     Dim pageContentName As String = ""
@@ -135,6 +134,21 @@ Public Class SpiderClass
                                     End If
                                 End If
 
+                                'make a substring of the og:title
+                                Dim title As String = ""
+                                Dim ogTitleTag As String = "property=""og:title"" content="""
+                                Dim titleSubstringStart As Integer = body.IndexOf(ogTitleTag)
+                                If (titleSubstringStart <> -1) Then
+                                    Dim titleStart As Integer = titleSubstringStart + ogTitleTag.Length
+                                    Dim titleSub = body.Substring(titleStart)
+                                    substringHint = 7
+                                    Dim finalTitleSection As Integer = (titleSub.IndexOf("""/>"))
+                                    If finalTitleSection > 0 Then
+                                        title = body.Substring(titleStart, finalTitleSection)
+                                        substringHint = 8
+                                    End If
+                                End If
+
                                 Dim cs As CPCSBaseClass = CP.CSNew()
                                 'update the current record in spider docs
                                 If (cs.Open("Spider Docs", "link=" & CP.Db.EncodeSQLText(finalUrl))) Then
@@ -145,7 +159,13 @@ Public Class SpiderClass
                                     cs.SetField("bodytext", bodyText)
                                     cs.SetField("pageid", pageid)
                                     cs.SetField("page", pagename)
-                                    cs.SetField("name", pageContentName)
+
+                                    If Not String.IsNullOrEmpty(title) Then
+                                        cs.SetField("name", title)
+                                    Else
+                                        cs.SetField("name", pageContentName)
+                                    End If
+
                                     cs.SetField("link", finalUrl)
                                     If Not String.IsNullOrEmpty(imageLink) Then
                                         cs.SetField("primaryimagelink", imageLink)
@@ -163,7 +183,12 @@ Public Class SpiderClass
                                         cs.SetField("link", finalUrl)
                                         cs.SetField("pageid", pageid)
                                         cs.SetField("page", pagename)
-                                        cs.SetField("name", pageContentName)
+
+                                        If Not String.IsNullOrEmpty(title) Then
+                                            cs.SetField("name", title)
+                                        Else
+                                            cs.SetField("name", pageContentName)
+                                        End If
 
                                         If Not String.IsNullOrEmpty(imageLink) Then
                                             cs.SetField("primaryimagelink", imageLink)
