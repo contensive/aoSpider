@@ -12,6 +12,11 @@ Public Class SpiderClass
         Dim substringHint As Integer = 0
         Try
             Dim uptodate As Integer = 1
+            Dim minify As Boolean = CP.Site.GetBoolean("ALLOW HTML MINIFY")
+            If minify Then
+                CP.Site.SetProperty("ALLOW HTML MINIFY", False)
+            End If
+
             Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP)
             For Each link In links
                 If (Not String.IsNullOrEmpty(link.name)) Then
@@ -40,7 +45,7 @@ Public Class SpiderClass
                         Dim querystring As String = link.querystringsuffix
                         Dim host As String = CP.Site.DomainPrimary
 
-                        'link manipulation if multiple slashes
+                        'link manipulation to get the pagename 
                         Dim pagename As String = ""
                         Dim linkName As String = link.name
                         If linkName.LastIndexOf("/") > 0 Then
@@ -51,7 +56,7 @@ Public Class SpiderClass
                             pagename = link.name.Replace("/", "")
                         End If
 
-                        'string manipulation to get the path              
+                        'string manipulation to get the path            
                         Dim path As String = linkName
                         Dim pageNameLocation As Integer = linkName.IndexOf(pagename)
                         Dim linkSubstring = linkName.Substring(0, pageNameLocation)
@@ -60,6 +65,7 @@ Public Class SpiderClass
                         Dim body As String = ""
                         Dim finalUrl As String = ""
                         substringHint = 1
+
 
                         'download from https first
                         Dim httpsUrl As String = "https://" + currentUrl
@@ -81,8 +87,8 @@ Public Class SpiderClass
                         End Try
 
                         Dim httpFailed As Boolean = False
+                        'download from http if https failed
                         If (httpsFailed) Then
-                            'download from http next
                             Dim httpUrl = "http://" + currentUrl
                             finalUrl = httpUrl
                             Try
@@ -203,6 +209,11 @@ Public Class SpiderClass
                     End If
                 End If
             Next
+
+            If minify Then
+                CP.Site.SetProperty("ALLOW HTML MINIFY", True)
+            End If
+
         Catch ex As Exception
             CP.Site.ErrorReport(ex, "the page with the link " & currentLink & " failed. With a substringhint of " & substringHint.ToString())
         End Try
