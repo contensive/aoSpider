@@ -79,10 +79,10 @@ end function]]></Code>
 		<OnPageEndEvent>No</OnPageEndEvent>
 		<OnPageStartEvent>No</OnPageStartEvent>
 		<OnBodyStart>No</OnBodyStart>
-		<OnBodyEnd>Yes</OnBodyEnd>
+		<OnBodyEnd>No</OnBodyEnd>
 		<RemoteMethod>No</RemoteMethod>
 		<ProcessRunOnce>No</ProcessRunOnce>
-		<ProcessInterval></ProcessInterval>
+		<ProcessInterval>10</ProcessInterval>
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles></Styles>
