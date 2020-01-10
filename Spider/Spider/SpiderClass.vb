@@ -7,6 +7,11 @@ Imports Contensive.BaseClasses
 Public Class SpiderClass
     Inherits AddonBaseClass
 
+    Public Class responseResult
+        Public failed As Boolean
+        Public returnString As String
+    End Class
+
     Public Overrides Function Execute(ByVal CP As CPBaseClass) As Object
         Dim currentLink As String = ""
         Dim substringHint As Integer = 0
@@ -17,23 +22,16 @@ Public Class SpiderClass
                 CP.Site.SetProperty("ALLOW HTML MINIFY", False)
             End If
 
-
-
-
-
-
-
             'a dictionary of querystringsuffixes with thier page numbers
             Dim querystringDictionary As Dictionary(Of String, String) = New Dictionary(Of String, String)
             Dim nullQsList As List(Of Integer) = New List(Of Integer)
-
-            'Dim queryStringList As List(Of String) = New List(Of String)
 
             'loop through each link in the link alias table
             Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, "", "id desc")
             For Each link In links
                 If (Not String.IsNullOrEmpty(link.name)) Then
 
+                    Dim querystring As String = link.querystringsuffix
                     'checks if the querystring is already inside the dictionary
                     Dim insideDictionary As Boolean = False
                     If querystringDictionary.ContainsKey(link.querystringsuffix) Then
@@ -46,8 +44,6 @@ Public Class SpiderClass
                     Dim nullQSinList As Boolean = (String.IsNullOrEmpty(link.querystringsuffix) And nullQsList.Contains(link.pageid))
                     'checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
                     Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
-                    Dim querystring As String = link.querystringsuffix
-
 
                     If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
                         If Not String.IsNullOrEmpty(link.querystringsuffix) Then
@@ -103,41 +99,20 @@ Public Class SpiderClass
                             'download from https first
                             Dim httpsUrl As String = "https://" + currentUrl
                             finalUrl = httpsUrl
-                            Dim httpsFailed As Boolean = False
-                            Try
-                                Dim uri As Uri = New Uri(httpsUrl)
-                                Dim request As HttpWebRequest = WebRequest.Create(uri)
-                                request.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
-                                Using response As HttpWebResponse = request.GetResponse()
-                                    Using stream As Stream = response.GetResponseStream()
-                                        Using reader As StreamReader = New StreamReader(stream)
-                                            body = reader.ReadToEnd()
-                                        End Using
-                                    End Using
-                                End Using
-                            Catch
-                                httpsFailed = True
-                            End Try
+                            Dim httpsResult As responseResult = readFromURL(httpsUrl)
+                            Dim httpsfailed = httpsResult.failed
+                            If Not httpsfailed Then
+                                body = httpsResult.returnString
+                            End If
 
                             Dim httpFailed As Boolean = False
                             'download from http if https failed
                             If (httpsFailed) Then
                                 Dim httpUrl = "http://" + currentUrl
                                 finalUrl = httpUrl
-                                Try
-                                    Dim uri As Uri = New Uri(httpUrl)
-                                    Dim request As HttpWebRequest = WebRequest.Create(uri)
-                                    request.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
-                                    Using response As HttpWebResponse = request.GetResponse()
-                                        Using stream As Stream = response.GetResponseStream()
-                                            Using reader As StreamReader = New StreamReader(stream)
-                                                body = reader.ReadToEnd()
-                                            End Using
-                                        End Using
-                                    End Using
-                                Catch ex As Exception
-                                    httpFailed = True
-                                End Try
+                                Dim httpResult As responseResult = readFromURL(httpUrl)
+                                httpFailed = httpResult.failed
+                                body = httpResult.returnString
                             End If
 
 
@@ -155,13 +130,11 @@ Public Class SpiderClass
                                     'make a substring of the og:image                                   
                                     Dim ogImageTag As String = "property=""og:image"" content="""
                                     Dim imageLink As String = getContentFromOGTag(ogImageTag, body)
-
-
+                                    substringHint = 3
                                     'make a substring of the og:title
                                     Dim ogTitleTag As String = "property=""og:title"" content="""
                                     Dim title As String = getContentFromOGTag(ogTitleTag, body)
-
-
+                                    substringHint = 4
                                     Dim cs As CPCSBaseClass = CP.CSNew()
                                     'update the current record in spider docs
                                     If (cs.Open("Spider Docs", "link=" & CP.Db.EncodeSQLText(finalUrl))) Then
@@ -172,7 +145,6 @@ Public Class SpiderClass
                                         cs.SetField("bodytext", bodyText)
                                         cs.SetField("pageid", pageid)
                                         cs.SetField("page", pagename)
-
                                         If Not String.IsNullOrEmpty(title) Then
                                             cs.SetField("name", title)
                                         Else
@@ -196,7 +168,6 @@ Public Class SpiderClass
                                             cs.SetField("link", finalUrl)
                                             cs.SetField("pageid", pageid)
                                             cs.SetField("page", pagename)
-
                                             If Not String.IsNullOrEmpty(title) Then
                                                 cs.SetField("name", title)
                                             Else
@@ -206,7 +177,6 @@ Public Class SpiderClass
                                             If Not String.IsNullOrEmpty(imageLink) Then
                                                 cs.SetField("primaryimagelink", imageLink)
                                             End If
-
                                             cs.Save()
                                             cs.Close()
                                         End If
@@ -214,7 +184,7 @@ Public Class SpiderClass
                                 End If
                             End If
                         End If
-                    End If
+                        End If
                 End If
             Next
 
@@ -243,20 +213,30 @@ Public Class SpiderClass
         End If
 
         Return ogTagContent
+
     End Function
 
+    Function readFromURL(url As String) As responseResult
 
-    'Dim titleSubstringStart As Integer = body.IndexOf(ogTitleTag)
-    'If (titleSubstringStart <> -1) Then
-    '    Dim titleStart As Integer = titleSubstringStart + ogTitleTag.Length
-    '    Dim titleSub = body.Substring(titleStart)
-    '    substringHint = 7
-    '    Dim finalTitleSection As Integer = (titleSub.IndexOf("""/>"))
-    '    If finalTitleSection > 0 Then
-    '        title = body.Substring(titleStart, finalTitleSection)
-    '        substringHint = 8
-    '    End If
-    'End If
+        Dim result As responseResult = New responseResult()
+        result.failed = False
+        result.returnString = ""
+        Try
+            Dim uri As Uri = New Uri(url)
+            Dim request As HttpWebRequest = WebRequest.Create(uri)
+            request.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
+            Using response As HttpWebResponse = request.GetResponse()
+                Using stream As Stream = response.GetResponseStream()
+                    Using reader As StreamReader = New StreamReader(stream)
+                        result.returnString = reader.ReadToEnd()
+                    End Using
+                End Using
+            End Using
+        Catch
+            result.failed = True
+        End Try
 
+        Return result
+    End Function
 
 End Class
