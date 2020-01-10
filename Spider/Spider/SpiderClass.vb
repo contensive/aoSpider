@@ -44,6 +44,8 @@ Public Class SpiderClass
                     Dim nullQSinList As Boolean = (String.IsNullOrEmpty(link.querystringsuffix) And nullQsList.Contains(link.pageid))
                     'checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
                     Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
+                    Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
+
 
                     If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
                         If Not String.IsNullOrEmpty(link.querystringsuffix) Then
@@ -57,19 +59,28 @@ Public Class SpiderClass
                         Dim blocked As Boolean = False
                         Dim pageContentName As String = ""
                         Dim csContent As CPCSBaseClass = CP.CSNew
+
                         If csContent.Open("Page Content", "id=" & pageid.ToString()) Then
                             pageContentName = csContent.GetText("name")
                             blocked = csContent.GetBoolean("blockcontent")
                             Dim parentid As Integer = csContent.GetInteger("parentid")
+                            currentBlockedList.Add(pageid)
 
                             'checks each page's parent to make sure that the page content isn't blocked
                             If Not blocked And parentid <> 0 Then
                                 While parentid <> 0 And (Not blocked)
                                     If csContent.Open("Page Content", "id=" & parentid.ToString()) Then
+                                        currentBlockedList.Add(parentid)
                                         blocked = csContent.GetBoolean("blockcontent")
                                         parentid = csContent.GetInteger("parentid")
                                     End If
                                 End While
+                            End If
+
+                            If Not blocked Then
+                                currentBlockedList.Clear()
+                            Else
+                                deleteBlockedPagesFromSpiderDocs(CP, currentBlockedList)
                             End If
                         End If
 
@@ -235,6 +246,25 @@ Public Class SpiderClass
         End Try
 
         Return result
+    End Function
+
+
+    Function deleteBlockedPagesFromSpiderDocs(cp As CPBaseClass, blockedPages As List(Of Integer)) As Boolean
+        Dim success = True
+        Try
+            Dim cs As CPCSBaseClass = cp.CSNew()
+            For Each page In blockedPages
+                If cs.Open("Spider Docs", "pageid=" & page.ToString()) Then
+                    cp.Db.ExecuteNonQuery("delete from ccspiderdocs where pageid=" & page.ToString())
+                End If
+            Next
+
+        Catch ex As Exception
+            success = False
+            cp.Site.ErrorReport(ex, "deleteBlockedPagesFromSpiderDocs failed")
+        End Try
+
+        Return success
     End Function
 
 End Class
