@@ -30,8 +30,8 @@ Public Class SpiderClass
             Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, "", "id desc")
             For Each link In links
                 If (Not String.IsNullOrEmpty(link.name)) Then
-
                     Dim querystring As String = link.querystringsuffix
+                    Dim host As String = CP.Site.DomainPrimary
                     'checks if the querystring is already inside the dictionary
                     Dim insideDictionary As Boolean = False
                     If querystringDictionary.ContainsKey(link.querystringsuffix) Then
@@ -74,7 +74,6 @@ Public Class SpiderClass
                         End If
 
                         If Not blocked Then
-                            Dim host As String = CP.Site.DomainPrimary
                             'link manipulation to get the pagename 
                             Dim pagename As String = ""
                             Dim linkName As String = link.name
@@ -93,12 +92,11 @@ Public Class SpiderClass
                             path = linkSubstring
                             Dim currentUrl As String = CP.Site.DomainPrimary + link.name
                             Dim body As String = ""
-                            Dim finalUrl As String = ""
-                            substringHint = 1
+
 
                             'download from https first
                             Dim httpsUrl As String = "https://" + currentUrl
-                            finalUrl = httpsUrl
+                            Dim finalUrl As String = httpsUrl
                             Dim httpsResult As responseResult = readFromURL(httpsUrl)
                             Dim httpsfailed = httpsResult.failed
                             If Not httpsfailed Then
@@ -107,7 +105,7 @@ Public Class SpiderClass
 
                             Dim httpFailed As Boolean = False
                             'download from http if https failed
-                            If (httpsFailed) Then
+                            If (httpsfailed) Then
                                 Dim httpUrl = "http://" + currentUrl
                                 finalUrl = httpUrl
                                 Dim httpResult As responseResult = readFromURL(httpUrl)
@@ -115,12 +113,12 @@ Public Class SpiderClass
                                 body = httpResult.returnString
                             End If
 
-
+                            'if neither the https or http read failed, then continue spidering
                             If Not httpFailed Then
                                 'make a substring of the body from text search start to end
                                 Dim substringStart As Integer = body.IndexOf("<!-- TextSearchStart -->")
                                 Dim substringEnd As Integer = body.IndexOf("<!-- TextSearchEnd -->")
-
+                                'checks if there are text search comments in the body, if there aren't any then the spider moves onto the next link
                                 If substringStart <> -1 And substringEnd <> -1 Then
                                     Dim length As Integer = substringEnd - substringStart
                                     Dim body2 As String = body.Substring(substringStart, length)
@@ -184,7 +182,7 @@ Public Class SpiderClass
                                 End If
                             End If
                         End If
-                        End If
+                    End If
                 End If
             Next
 
