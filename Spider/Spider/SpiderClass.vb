@@ -36,9 +36,8 @@ Public Class SpiderClass
             End If
 
             'loop through each link in the link alias table
-            Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, sqlWhere, "datespidered asc, id desc", count)
+            Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, sqlWhere, "spidered asc, datespidered asc, id desc", count)
             For Each link In links
-                CP.Site.ErrorReport(link.pageid)
                 If (Not String.IsNullOrEmpty(link.name)) Then
                     Dim querystring As String = link.querystringsuffix
                     Dim host As String = CP.Site.DomainPrimary
@@ -50,14 +49,37 @@ Public Class SpiderClass
                         End If
                     End If
 
-                    'checks if this link's querystring is null and if this link's pageid is already inside the nullQueryStringList
+                    'checks if this link's querystring is null and if this link's pageid is already inside the nullQuerystringPageList
                     Dim nullQSinList As Boolean = (String.IsNullOrEmpty(link.querystringsuffix) And nullQsList.Contains(link.pageid))
                     'checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
                     Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
                     Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
-                    Dim spiderCheck As CPCSBaseClass = CP.CSNew()
 
-                    If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
+                    Dim spiderCheck As CPCSBaseClass = CP.CSNew()
+                    Dim previousspider As Boolean = False
+                    Dim queryStringWhere As String = ""
+                    If Not String.IsNullOrEmpty(link.querystringsuffix) Then
+                        queryStringWhere = "querystring=" & CP.Db.EncodeSQLText(link.querystringsuffix)
+                    Else
+                        queryStringWhere = "querystring is null"
+                    End If
+
+                    'this if checks that the current link alias' page doesn't already have a corresponding spider doc record from a later added link alias
+                    If spiderCheck.Open("Spider Docs", "pageid=" & link.pageid & " and " & queryStringWhere) Then
+                        Dim aliasCheck As CPCSBaseClass = CP.CSNew()
+                        If aliasCheck.Open("Link Aliases", "pageid=" & link.pageid, "id desc") Then
+                            If link.id < (aliasCheck.GetInteger("id")) Then
+                                previousspider = True
+                                link.spidered = True
+                                link.datespidered = Date.Now
+                                link.save(CP)
+                            End If
+                        End If
+                        aliasCheck.Close()
+                        spiderCheck.Close()
+                    End If
+
+                    If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) And (Not previousspider) Then
                         If Not String.IsNullOrEmpty(link.querystringsuffix) Then
                             querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
                         Else
@@ -67,7 +89,6 @@ Public Class SpiderClass
                         currentLink = link.name
                         Dim pageid As Integer = link.pageid
                         Dim blocked As Boolean = False
-
                         'link manipulation to get the pagename 
                         Dim pagename As String = ""
                         Dim linkName As String = link.name
@@ -153,11 +174,11 @@ Public Class SpiderClass
 
                                     'make a substring of the og:image                                   
                                     Dim ogImageTag As String = "property=""og:image"" content="""
-                                    Dim imageLink As String = getContentFromOGTag(ogImageTag, body)
+                                    Dim imageLink As String = getContentFromOGTag(CP, ogImageTag, body)
                                     substringHint = 3
                                     'make a substring of the og:title
                                     Dim ogTitleTag As String = "property=""og:title"" content="""
-                                    Dim title As String = getContentFromOGTag(ogTitleTag, body)
+                                    Dim title As String = getContentFromOGTag(CP, ogTitleTag, body)
                                     substringHint = 4
                                     Dim cs As CPCSBaseClass = CP.CSNew()
                                     Dim name As String = ""
@@ -233,22 +254,25 @@ Public Class SpiderClass
         End Try
     End Function
     '
-    Function getContentFromOGTag(ogTagValue As String, body As String) As String
+    Function getContentFromOGTag(cp As CPBaseClass, ogTagValue As String, body As String) As String
 
         Dim ogTagContent As String = ""
-        Dim imageSubstringStart As Integer = body.IndexOf(ogTagValue)
-        If (imageSubstringStart <> -1) Then
-            'there is an ogTage that can be used
-            Dim primaryImageLinkStart As Integer = imageSubstringStart + ogTagValue.Length
-            Dim imageLinkSub = body.Substring(primaryImageLinkStart)
-            Dim finalImageSection As Integer = (imageLinkSub.IndexOf("""/>"))
-            If finalImageSection > 0 Then
-                ogTagContent = body.Substring(primaryImageLinkStart, finalImageSection)
+        Try
+            Dim imageSubstringStart As Integer = body.IndexOf(ogTagValue)
+            If (imageSubstringStart <> -1) Then
+                'there is an ogTage that can be used
+                Dim primaryImageLinkStart As Integer = imageSubstringStart + ogTagValue.Length
+                Dim imageLinkSub = body.Substring(primaryImageLinkStart)
+                Dim finalImageSection As Integer = (imageLinkSub.IndexOf("""/>"))
+                If finalImageSection > 0 Then
+                    ogTagContent = body.Substring(primaryImageLinkStart, finalImageSection)
+                End If
             End If
-        End If
+        Catch ex As Exception
+            cp.Site.ErrorReport(ex, "get content from ogtag")
+        End Try
 
         Return ogTagContent
-
     End Function
     '
     Function readFromURL(url As String) As responseResult
