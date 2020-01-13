@@ -24,6 +24,7 @@ Public Class SpiderClass
 
             'a dictionary of querystringsuffixes with thier page numbers
             Dim querystringDictionary As Dictionary(Of String, String) = New Dictionary(Of String, String)
+            'a list of all the link aliases with a null querystring
             Dim nullQsList As List(Of Integer) = New List(Of Integer)
             Dim sqlWhere As String = ""
             Dim count As Integer = 1
