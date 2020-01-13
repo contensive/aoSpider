@@ -25,10 +25,20 @@ Public Class SpiderClass
             'a dictionary of querystringsuffixes with thier page numbers
             Dim querystringDictionary As Dictionary(Of String, String) = New Dictionary(Of String, String)
             Dim nullQsList As List(Of Integer) = New List(Of Integer)
+            Dim sqlWhere As String = ""
+            Dim count As Integer = 1
+            If Not String.IsNullOrEmpty(CP.Doc.GetText("Spider Where Clause")) Then
+                sqlWhere = CP.Doc.GetText("Spider Where Clause")
+            End If
+
+            If CP.Doc.GetInteger("Spider Count") <> 0 Then
+                count = CP.Doc.GetInteger("Spider Count")
+            End If
 
             'loop through each link in the link alias table
-            Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, "spidered=0  or spidered is null", "id desc")
+            Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, sqlWhere, "datespidered asc, id desc", count)
             For Each link In links
+                CP.Site.ErrorReport(link.pageid)
                 If (Not String.IsNullOrEmpty(link.name)) Then
                     Dim querystring As String = link.querystringsuffix
                     Dim host As String = CP.Site.DomainPrimary
@@ -48,7 +58,6 @@ Public Class SpiderClass
                     Dim spiderCheck As CPCSBaseClass = CP.CSNew()
 
                     If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
-
                         If Not String.IsNullOrEmpty(link.querystringsuffix) Then
                             querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
                         Else
@@ -95,13 +104,14 @@ Public Class SpiderClass
                                 currentBlockedList.Clear()
                             Else
                                 deleteBlockedPagesFromSpiderDocs(CP, currentBlockedList)
+                                link.spidered = True
+                                link.datespidered = Date.Now
+                                link.save(CP)
                             End If
                             csContent.Close()
                         End If
 
                         If Not blocked Then
-
-
                             'string manipulation to get the path            
                             Dim path As String = linkName
                             Dim pageNameLocation As Integer = linkName.IndexOf(pagename)
@@ -176,6 +186,7 @@ Public Class SpiderClass
                                         cs.Save()
                                         cs.Close()
                                         link.spidered = True
+                                        link.datespidered = Date.Now
                                         link.save(CP)
                                     Else
                                         'insert a new record into spider docs
@@ -197,6 +208,7 @@ Public Class SpiderClass
                                             cs.Save()
                                             cs.Close()
                                             link.spidered = True
+                                            link.datespidered = Date.Now
                                             link.save(CP)
                                         End If
                                     End If
@@ -206,6 +218,7 @@ Public Class SpiderClass
                     Else
                         'if the link has already been spidered/doesn't need to be spidered, mark its record as spidered
                         link.spidered = True
+                        link.datespidered = Date.Now
                         link.save(CP)
                     End If
                 End If

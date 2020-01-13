@@ -8,4 +8,5 @@ Public Class LinkAliasModel
     Public Property pageid As Integer
     Public Property querystringsuffix As String
     Public Property spidered As Boolean
+    Public Property datespidered As Date
 End Class
