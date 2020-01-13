@@ -11,7 +11,7 @@ Public Class SpiderOnChange
             Dim cs As CPCSBaseClass = CP.CSNew()
             If (pageId <> 0) Then
                 If (cs.Open("Link Aliases", "pageid=" & pageId & "and querystringsuffix is null")) Then
-                    cs.SetField("spidered", 0)
+                    cs.SetField("spidered", False)
                     cs.Save()
                 End If
                 'executes the spider

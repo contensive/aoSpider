@@ -46,61 +46,8 @@ Public Class SpiderClass
                     Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
                     Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
                     Dim spiderCheck As CPCSBaseClass = CP.CSNew()
-                    Dim previousSpider As Boolean = False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    '****************************************************************************************************************************************************
-                    'check doesnt work yet
-                    If spiderCheck.Open("Spider Docs", "pageid=" & link.pageid & " and querystring=" & CP.Db.EncodeSQLText(link.querystringsuffix)) Then
-                        Dim aliasCheck As CPCSBaseClass = CP.CSNew()
-                        If aliasCheck.Open("Link Aliases", "pageid=" & link.pageid, "id desc") Then
-                            'While aliasCheck.OK()
-                            '    Dim currentId = aliasCheck.GetInteger("id")
-                            '    If currentId > link.pageid Then
-                            '        previousSpider = True
-                            '    End If
-                            '    spiderCheck.GoNext()
-                            'End While
-                            If link.id < (aliasCheck.GetInteger("id")) Then
-                                previousSpider = True
-                            End If
-                        End If
-                        aliasCheck.Close()
-                        spiderCheck.Close()
-                    End If
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) And (Not previousSpider) Then
+                    If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
 
                         If Not String.IsNullOrEmpty(link.querystringsuffix) Then
                             querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
@@ -220,6 +167,7 @@ Public Class SpiderClass
                                         cs.SetField("pageid", pageid)
                                         cs.SetField("page", pagename)
                                         cs.SetField("name", name)
+                                        cs.SetField("modifieddate", Date.Now)
 
                                         cs.SetField("link", finalUrl)
                                         If Not String.IsNullOrEmpty(imageLink) Then
@@ -241,6 +189,7 @@ Public Class SpiderClass
                                             cs.SetField("pageid", pageid)
                                             cs.SetField("page", pagename)
                                             cs.SetField("name", name)
+                                            cs.SetField("modifieddate", Date.Now)
 
                                             If Not String.IsNullOrEmpty(imageLink) Then
                                                 cs.SetField("primaryimagelink", imageLink)
@@ -254,6 +203,10 @@ Public Class SpiderClass
                                 End If
                             End If
                         End If
+                    Else
+                        'if the link has already been spidered/doesn't need to be spidered, mark its record as spidered
+                        link.spidered = True
+                        link.save(CP)
                     End If
                 End If
             Next
