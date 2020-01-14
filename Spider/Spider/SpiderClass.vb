@@ -1,6 +1,7 @@
 ﻿Option Explicit On
 Imports System.IO
 Imports System.Net
+Imports System.Text.RegularExpressions
 Imports Contensive.BaseClasses
 
 
@@ -39,140 +40,130 @@ Public Class SpiderClass
             'loop through each link in the link alias table
             Dim links = Contensive.Models.Db.DbBaseModel.createList(Of LinkAliasModel)(CP, sqlWhere, "spidered asc, datespidered asc, id desc", count)
             For Each link In links
-                If (Not String.IsNullOrEmpty(link.name)) Then
-                    Dim querystring As String = link.querystringsuffix
-                    Dim host As String = CP.Site.DomainPrimary
-                    'checks if the querystring is already inside the dictionary
-                    Dim insideDictionary As Boolean = False
-                    If querystringDictionary.ContainsKey(link.querystringsuffix) Then
-                        If querystringDictionary(link.querystringsuffix).Equals(link.pageid.ToString()) Then
-                            insideDictionary = True
-                        End If
+                Dim querystring As String = link.querystringsuffix
+                Dim host As String = CP.Site.DomainPrimary
+                'checks if the querystring is already inside the dictionary
+                Dim insideDictionary As Boolean = False
+                If querystringDictionary.ContainsKey(link.querystringsuffix) Then
+                    If querystringDictionary(link.querystringsuffix).Equals(link.pageid.ToString()) Then
+                        insideDictionary = True
                     End If
+                End If
 
-                    'checks if this link's querystring is null and if this link's pageid is already inside the nullQuerystringPageList
-                    Dim nullQSinList As Boolean = (String.IsNullOrEmpty(link.querystringsuffix) And nullQsList.Contains(link.pageid))
-                    'checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
-                    Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
-                    Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
+                'checks if this link's querystring is null and if this link's pageid is already inside the nullQuerystringPageList
+                Dim nullQSinList As Boolean = (String.IsNullOrEmpty(link.querystringsuffix) And nullQsList.Contains(link.pageid))
+                'checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
+                Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
+                Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
 
-                    Dim spiderCheck As CPCSBaseClass = CP.CSNew()
-                    Dim previousspider As Boolean = False
-                    Dim queryStringWhere As String = ""
+                If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
                     If Not String.IsNullOrEmpty(link.querystringsuffix) Then
-                        queryStringWhere = "querystring=" & CP.Db.EncodeSQLText(link.querystringsuffix)
+                        querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
                     Else
-                        queryStringWhere = "querystring is null"
+                        nullQsList.Add(link.pageid)
                     End If
-
-                    'this if checks that the current link alias' page doesn't already have a corresponding spider doc record from a later added link alias
-                    If spiderCheck.Open("Spider Docs", "pageid=" & link.pageid & " and " & queryStringWhere) Then
-                        Dim aliasCheck As CPCSBaseClass = CP.CSNew()
-                        If aliasCheck.Open("Link Aliases", "pageid=" & link.pageid, "id desc") Then
-                            If link.id < (aliasCheck.GetInteger("id")) Then
-                                previousspider = True
-                                link.spidered = True
-                                link.datespidered = Date.Now
-                                link.save(CP)
-                            End If
-                        End If
-                        aliasCheck.Close()
-                        spiderCheck.Close()
+                    currentLink = link.name
+                    Dim pageid As Integer = link.pageid
+                    Dim blocked As Boolean = False
+                    'link manipulation to get the pagename 
+                    Dim pagename As String = ""
+                    Dim linkName As String = link.name
+                    If linkName.LastIndexOf("/") > 0 Then
+                        Dim lastIndex = linkName.LastIndexOf("/")
+                        pagename = linkName.Substring(lastIndex + 1)
+                        substringHint = 55
+                    Else
+                        pagename = link.name.Replace("/", "")
                     End If
+                    Dim pageContentName As String = pagename
+                    Dim csContent As CPCSBaseClass = CP.CSNew
+                    If csContent.Open("Page Content", "id=" & pageid.ToString()) Then
 
-                    If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) And (Not previousspider) Then
-                        If Not String.IsNullOrEmpty(link.querystringsuffix) Then
-                            querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
-                        Else
-                            nullQsList.Add(link.pageid)
+                        If String.IsNullOrEmpty(link.querystringsuffix) Then
+                            pageContentName = csContent.GetText("name")
                         End If
+                        blocked = csContent.GetBoolean("blockcontent")
+                        Dim parentid As Integer = csContent.GetInteger("parentid")
+                        currentBlockedList.Add(pageid)
 
-                        currentLink = link.name
-                        Dim pageid As Integer = link.pageid
-                        Dim blocked As Boolean = False
-                        'link manipulation to get the pagename 
-                        Dim pagename As String = ""
-                        Dim linkName As String = link.name
-                        If linkName.LastIndexOf("/") > 0 Then
-                            Dim lastIndex = linkName.LastIndexOf("/")
-                            pagename = linkName.Substring(lastIndex + 1)
-                            substringHint = 55
-                        Else
-                            pagename = link.name.Replace("/", "")
-                        End If
-                        Dim pageContentName As String = pagename
-                        Dim csContent As CPCSBaseClass = CP.CSNew
-                        If csContent.Open("Page Content", "id=" & pageid.ToString()) Then
-
-                            If String.IsNullOrEmpty(link.querystringsuffix) Then
-                                pageContentName = csContent.GetText("name")
-                            End If
-                            blocked = csContent.GetBoolean("blockcontent")
-                            Dim parentid As Integer = csContent.GetInteger("parentid")
-                            currentBlockedList.Add(pageid)
-
-                            'checks each page's parent to make sure that the page content isn't blocked
-                            If Not blocked And parentid <> 0 Then
-                                While parentid <> 0 And (Not blocked)
-                                    If csContent.Open("Page Content", "id=" & parentid.ToString()) Then
-                                        currentBlockedList.Add(parentid)
-                                        blocked = csContent.GetBoolean("blockcontent")
-                                        parentid = csContent.GetInteger("parentid")
-                                    End If
-                                End While
-                            End If
-
-                            If Not blocked Then
-                                currentBlockedList.Clear()
-                            Else
-                                deleteBlockedPagesFromSpiderDocs(CP, currentBlockedList)
-                                link.spidered = True
-                                link.datespidered = Date.Now
-                                link.save(CP)
-                            End If
-                            csContent.Close()
+                        'checks each page's parent to make sure that the page content isn't blocked
+                        If Not blocked And parentid <> 0 Then
+                            While parentid <> 0 And (Not blocked)
+                                If csContent.Open("Page Content", "id=" & parentid.ToString()) Then
+                                    currentBlockedList.Add(parentid)
+                                    blocked = csContent.GetBoolean("blockcontent")
+                                    parentid = csContent.GetInteger("parentid")
+                                Else
+                                    blocked = True
+                                End If
+                            End While
                         End If
 
                         If Not blocked Then
-                            'string manipulation to get the path            
-                            Dim path As String = linkName
-                            Dim pageNameLocation As Integer = linkName.IndexOf(pagename)
-                            Dim linkSubstring = linkName.Substring(0, pageNameLocation)
-                            path = linkSubstring
-                            Dim currentUrl As String = CP.Site.DomainPrimary + link.name
-                            Dim body As String = ""
+                            currentBlockedList.Clear()
+                        Else
+                            deleteBlockedPagesFromSpiderDocs(CP, currentBlockedList)
+                            link.spidered = True
+                            link.datespidered = Date.Now
+                            link.save(CP)
+                        End If
+                        csContent.Close()
+                    End If
 
-                            'download from https first
-                            Dim httpsUrl As String = "https://" + currentUrl
-                            Dim finalUrl As String = httpsUrl
-                            Dim httpsResult As responseResult = readFromURL(httpsUrl)
-                            Dim httpsfailed = httpsResult.failed
-                            If Not httpsfailed Then
-                                body = httpsResult.returnString
-                            End If
+                    If Not blocked Then
+                        'string manipulation to get the path            
+                        Dim path As String = linkName
+                        Dim pageNameLocation As Integer = linkName.IndexOf(pagename)
+                        Dim linkSubstring = linkName.Substring(0, pageNameLocation)
+                        path = linkSubstring
+                        ' Dim currentUrl As String = CP.Site.DomainPrimary + link.name
+                        Dim body As String = ""
 
-                            Dim httpFailed As Boolean = False
-                            'download from http if https failed
-                            If (httpsfailed) Then
-                                Dim httpUrl = "http://" + currentUrl
-                                finalUrl = httpUrl
-                                Dim httpResult As responseResult = readFromURL(httpUrl)
-                                httpFailed = httpResult.failed
-                                body = httpResult.returnString
-                            End If
+                        'download from https first
+                        Dim currentUrl As String = CP.Site.DomainPrimary + link.name
+                        Dim httpsUrl As String = "https://" + currentUrl
+                        Dim finalUrl As String = httpsUrl
+                        Dim httpsResult As responseResult = readFromURL(httpsUrl)
+                        Dim httpsfailed = httpsResult.failed
+                        If Not httpsfailed Then
+                            body = httpsResult.returnString
+                        End If
 
-                            'if neither the https or http read failed, then continue spidering
-                            If Not httpFailed Then
-                                'make a substring of the body from text search start to end
-                                Dim substringStart As Integer = body.IndexOf("<!-- TextSearchStart -->")
-                                Dim substringEnd As Integer = body.IndexOf("<!-- TextSearchEnd -->")
-                                'checks if there are text search comments in the body, if there aren't any then the spider moves onto the next link
-                                If substringStart <> -1 And substringEnd <> -1 Then
-                                    Dim length As Integer = substringEnd - substringStart
-                                    Dim body2 As String = body.Substring(substringStart, length)
-                                    Dim bodyText As String = CP.Utils.ConvertHTML2Text(body2)
-                                    substringHint = 2
+                        Dim httpFailed As Boolean = False
+                        'download from http if https failed
+                        If (httpsfailed) Then
+                            Dim httpUrl = "http://" + currentUrl
+                            finalUrl = httpUrl
+                            Dim httpResult As responseResult = readFromURL(httpUrl)
+                            httpFailed = httpResult.failed
+                            body = httpResult.returnString
+                        End If
 
+
+                        'if neither the https or http read failed, then continue spidering
+                        If Not httpFailed Then
+                            'make a substring of the body from text search start to end
+                            Dim substringStart As Integer = body.IndexOf("<!-- TextSearchStart -->")
+                            Dim substringEnd As Integer = body.IndexOf("<!-- TextSearchEnd -->")
+                            'checks if there are text search comments in the body, if there aren't any then the spider moves onto the next link
+                            If substringStart <> -1 And substringEnd <> -1 Then
+                                Dim length As Integer = substringEnd - substringStart
+                                Dim body2 As String = body.Substring(substringStart, length)
+                                Dim bodyText1 As String = body2
+
+
+                                'remove scripts
+                                bodyText1 = removeAllCharactersInbetweenTwoStrings(CP, "<script", "</script>", bodyText1)
+                                'remove style tags
+                                bodyText1 = removeAllCharactersInbetweenTwoStrings(CP, "<style>", "</style>", bodyText1)
+
+
+                                bodyText1 = Regex.Replace(bodyText1, "<(.|\n)*?>", "")
+                                ' CP.Site.ErrorReport(bodyText1)
+                                'bodyText1 = CP.Utils.ConvertHTML2Text(body2)
+                                ' Dim bodyText As String = CP.Utils.ConvertHTML2Text(body2)
+                                substringHint = 2
+                                If Not String.IsNullOrEmpty(bodyText1) Then
                                     'make a substring of the og:image                                   
                                     Dim ogImageTag As String = "property=""og:image"" content="""
                                     Dim imageLink As String = getContentFromOGTag(CP, ogImageTag, body)
@@ -195,7 +186,7 @@ Public Class SpiderClass
                                         cs.SetField("path", path)
                                         cs.SetField("uptodate", uptodate)
                                         cs.SetField("querystring", querystring)
-                                        cs.SetField("bodytext", bodyText)
+                                        cs.SetField("bodytext", bodyText1)
                                         cs.SetField("pageid", pageid)
                                         cs.SetField("page", pagename)
                                         cs.SetField("name", name)
@@ -217,7 +208,7 @@ Public Class SpiderClass
                                             cs.SetField("path", path)
                                             cs.SetField("uptodate", uptodate)
                                             cs.SetField("querystring", querystring)
-                                            cs.SetField("bodytext", bodyText)
+                                            cs.SetField("bodytext", bodyText1)
                                             cs.SetField("link", finalUrl)
                                             cs.SetField("pageid", pageid)
                                             cs.SetField("page", pagename)
@@ -237,13 +228,18 @@ Public Class SpiderClass
                                 End If
                             End If
                         End If
-                    Else
-                        'if the link has already been spidered/doesn't need to be spidered, mark its record as spidered
-                        link.spidered = True
-                        link.datespidered = Date.Now
-                        link.save(CP)
                     End If
+                Else
+                    'if the link has already been spidered/doesn't need to be spidered, mark its record as spidered
+                    link.spidered = True
+                    link.datespidered = Date.Now
+                    link.save(CP)
                 End If
+
+                link.spidered = True
+                link.datespidered = Date.Now
+                link.save(CP)
+
             Next
 
             If minify Then
@@ -317,4 +313,31 @@ Public Class SpiderClass
 
         Return success
     End Function
+
+    Function removeAllCharactersInbetweenTwoStrings(cp As CPBaseClass, start As String, finish As String, full As String) As String
+
+        Try
+            If full.Contains(start) And full.Contains(finish) Then
+
+                Dim fullCop As String = full
+                Dim st As Integer = fullCop.IndexOf(start)
+                Dim fin As Integer = fullCop.IndexOf(finish)
+                Dim finLen As Integer = finish.Length
+                Dim removed As String = fullCop.Substring(st, (fin - st) + finLen)
+                fullCop = fullCop.Replace(removed, "")
+                If fullCop.Contains(start) And full.Contains(finish) Then
+                    removeAllCharactersInbetweenTwoStrings = removeAllCharactersInbetweenTwoStrings(cp, start, finish, fullCop)
+                Else
+                    removeAllCharactersInbetweenTwoStrings = fullCop
+                End If
+            Else
+                Return full
+            End If
+
+        Catch ex As Exception
+            cp.Site.ErrorReport(ex)
+        End Try
+
+    End Function
+
 End Class
