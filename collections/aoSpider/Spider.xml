@@ -125,6 +125,43 @@ end function]]></Code>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
 	
+		<Addon name="Spider Clean Up" guid="{68CF6E9D-C77C-4DE2-8552-FBDDE883573F}" type="Add-on">
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.Spider.SpiderCleanUp]]></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>No</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>3500</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles></Styles>
+		<Scripting Language="" EntryPoint="" Timeout="5000"/>
+	</Addon>
+	
 	<CDef Name="Spider Cookies" Active="1" AdminOnly="1" AllowAdd="1" AllowCalendarEvents="0" AllowContentChildTool="0" AllowContentTracking="0" AllowDelete="1" AllowMetaContent="0" AllowTopicRules="0" AllowWorkflowAuthoring="0" AuthoringDataSourceName="Default" AuthoringTableName="ccSpiderCookies" ContentDataSourceName="Default" ContentTableName="ccSpiderCookies" DefaultSortMethod="By Name" DeveloperOnly="1" DropDownFieldList="NAME" EditorGroupName="" Parent="" IconLink="" IconHeight="0" IconWidth="0" IconSprites="0" isbasecontent="0" guid="{02FB3B93-2DCD-4F8C-9DEA-881E4C8E3C7C}" >
 		<Field Name="Name" active="True" AdminOnly="False" Authorable="True" Caption="Name" DeveloperOnly="False" EditSortPriority="110" FieldType="Text" HTMLContent="False" IndexColumn="0" IndexSortDirection="" IndexSortOrder="0" IndexWidth="40" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>
 		<Field Name="Active" active="True" AdminOnly="False" Authorable="True" Caption="Active" DeveloperOnly="False" EditSortPriority="200" FieldType="Boolean" HTMLContent="False" IndexColumn="99" IndexSortDirection="" IndexSortOrder="0" IndexWidth="0" RedirectID="" RedirectPath="" Required="False" TextBuffered="False" UniqueName="False" DefaultValue="1" RSSTitle="False" RSSDescription="False" MemberSelectGroupID="0" EditTab="" Scramble="False" LookupList="" NotEditable="False" Password="False" ReadOnly="False" ManyToManyRulePrimaryField="" ManyToManyRuleSecondaryField="" IsModified="False" IsBaseField="False" LookupContent="" RedirectContent="" ManyToManyContent="" ManyToManyRuleContent="" editorAddonId="" ></Field>

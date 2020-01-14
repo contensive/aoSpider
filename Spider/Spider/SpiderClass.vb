@@ -95,7 +95,7 @@ Public Class SpiderClass
                         Dim linkName As String = link.name
                         If linkName.LastIndexOf("/") > 0 Then
                             Dim lastIndex = linkName.LastIndexOf("/")
-                            pagename = linkName.Substring(lastIndex)
+                            pagename = linkName.Substring(lastIndex + 1)
                             substringHint = 55
                         Else
                             pagename = link.name.Replace("/", "")
@@ -190,7 +190,7 @@ Public Class SpiderClass
                                     End If
 
                                     'update the current record in spider docs
-                                    If (cs.Open("Spider Docs", "name=" & CP.Db.EncodeSQLText(name))) Then
+                                    If (cs.Open("Spider Docs", "link=" & CP.Db.EncodeSQLText(finalUrl))) Then
                                         cs.SetField("host", host)
                                         cs.SetField("path", path)
                                         cs.SetField("uptodate", uptodate)
