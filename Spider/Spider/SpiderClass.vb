@@ -65,6 +65,7 @@ Public Class SpiderClass
                     currentLink = link.name
                     Dim pageid As Integer = link.pageid
                     Dim blocked As Boolean = False
+                    Dim active As Boolean = True
                     'link manipulation to get the pagename 
                     Dim pagename As String = ""
                     Dim linkName As String = link.name
@@ -85,13 +86,15 @@ Public Class SpiderClass
                         blocked = csContent.GetBoolean("blockcontent")
                         Dim parentid As Integer = csContent.GetInteger("parentid")
                         currentBlockedList.Add(pageid)
+                        active = csContent.GetBoolean("active")
 
                         'checks each page's parent to make sure that the page content isn't blocked
-                        If Not blocked And parentid <> 0 Then
-                            While parentid <> 0 And (Not blocked)
+                        If Not blocked And (parentid <> 0) And active Then
+                            While parentid <> 0 And (Not blocked) And (active)
                                 If csContent.Open("Page Content", "id=" & parentid.ToString()) Then
                                     currentBlockedList.Add(parentid)
                                     blocked = csContent.GetBoolean("blockcontent")
+                                    active = csContent.GetBoolean("active")
                                     parentid = csContent.GetInteger("parentid")
                                 Else
                                     blocked = True
@@ -99,7 +102,7 @@ Public Class SpiderClass
                             End While
                         End If
 
-                        If Not blocked Then
+                        If (Not blocked) And active Then
                             currentBlockedList.Clear()
                         Else
                             deleteBlockedPagesFromSpiderDocs(CP, currentBlockedList)
@@ -110,7 +113,7 @@ Public Class SpiderClass
                         csContent.Close()
                     End If
 
-                    If Not blocked Then
+                    If (Not blocked) And active Then
                         'string manipulation to get the path            
                         Dim path As String = linkName
                         Dim pageNameLocation As Integer = linkName.IndexOf(pagename)
@@ -331,11 +334,12 @@ Public Class SpiderClass
                     removeAllCharactersInbetweenTwoStrings = fullCop
                 End If
             Else
-                Return full
+                removeAllCharactersInbetweenTwoStrings = full
             End If
 
         Catch ex As Exception
             cp.Site.ErrorReport(ex)
+            removeAllCharactersInbetweenTwoStrings = full
         End Try
 
     End Function
