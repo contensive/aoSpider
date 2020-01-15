@@ -42,6 +42,8 @@ Public Class SpiderClass
             For Each link In links
                 Dim querystring As String = link.querystringsuffix
                 Dim host As String = CP.Site.DomainPrimary
+                Dim qsHasFilePath As Boolean = querystring.Contains("/files/")
+
                 'checks if the querystring is already inside the dictionary
                 Dim insideDictionary As Boolean = False
                 If querystringDictionary.ContainsKey(link.querystringsuffix) Then
@@ -56,7 +58,7 @@ Public Class SpiderClass
                 Dim activeQsinList As Boolean = ((Not String.IsNullOrEmpty(link.querystringsuffix)) And (querystringDictionary.ContainsKey(link.querystringsuffix)))
                 Dim currentBlockedList As List(Of Integer) = New List(Of Integer)
 
-                If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) Then
+                If (Not nullQSinList) And (Not insideDictionary) And (Not activeQsinList) And (Not qsHasFilePath) Then
                     If Not String.IsNullOrEmpty(link.querystringsuffix) Then
                         querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString())
                     Else
@@ -194,6 +196,7 @@ Public Class SpiderClass
                                         cs.SetField("page", pagename)
                                         cs.SetField("name", name)
                                         cs.SetField("modifieddate", Date.Now)
+                                        cs.SetField("dateLastModified", Date.Now)
 
                                         cs.SetField("link", finalUrl)
                                         If Not String.IsNullOrEmpty(imageLink) Then
@@ -217,6 +220,7 @@ Public Class SpiderClass
                                             cs.SetField("page", pagename)
                                             cs.SetField("name", name)
                                             cs.SetField("modifieddate", Date.Now)
+                                            cs.SetField("datelastModified", Date.Now)
 
                                             If Not String.IsNullOrEmpty(imageLink) Then
                                                 cs.SetField("primaryimagelink", imageLink)
