@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="windows-1252"?>
-<Collection name="Spider" guid="{1EC821F6-CB2B-4371-8CD8-02F6DC44521B}" system="No" updatable="Yes" blockNavigatorNode="No">
+<Collection name="Spider" guid="{1EC821F6-CB2B-4371-8CD8-02F6DC44521B}" system="No" updatable="Yes" blockNavigatorNode="No" onInstallAddonGuid="{92AF3025-9BB9-4CF6-943E-8D0F678A31EB}">
 	<HelpLink>http://support.contensive.com/spider-addon</HelpLink>
 	<Help></Help>
+
+	<Addon name="Social Media Install" guid="{92AF3025-9BB9-4CF6-943E-8D0F678A31EB}" type="Add-on">
+		<Scripting Language="VBScript" EntryPoint="" Timeout="5000">
+			<Code><![CDATA[
+		function f
+			'
+			' -- delete activex addon
+			cp.db.executeNonQuery("delete from ccaggregatefunctions where ccguid='{E222CBF0-20B2-4221-93C3-03695F330C43}'")
+		end function
+		]]></Code>
+		</Scripting>
+	</Addon>
+	
+	
 	<Addon name="isAcrobatInstalled" guid="{4C86124F-6CB1-45D0-ADDD-431C7F58CB69}" type="Add-on">
 		<Copy></Copy>
 		<CopyText></CopyText>
