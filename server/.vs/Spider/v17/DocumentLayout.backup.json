@@ -82,7 +82,8 @@
               "RelativeToolTip": "Spider\\SpiderCleanUp.vb",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-05-31T19:36:41.614Z"
+              "WhenOpened": "2025-05-31T19:36:41.614Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -92,7 +93,7 @@
               "RelativeDocumentMoniker": "Spider\\SpiderClass.vb",
               "ToolTip": "C:\\Git\\aoSpider\\server\\Spider\\SpiderClass.vb",
               "RelativeToolTip": "Spider\\SpiderClass.vb",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAYwBYAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAYwCEAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2025-05-31T19:29:59.964Z",
               "EditorCaption": ""
@@ -107,7 +108,8 @@
               "RelativeToolTip": "Spider\\Models\\Db\\LinkAliasModel.vb",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-05-31T19:29:47.514Z"
+              "WhenOpened": "2025-05-31T19:29:47.514Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -119,7 +121,8 @@
               "RelativeToolTip": "Spider\\SpiderAllUnspideredLinks.vb",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-03-20T20:02:40.67Z"
+              "WhenOpened": "2025-03-20T20:02:40.67Z",
+              "EditorCaption": ""
             }
           ]
         }
