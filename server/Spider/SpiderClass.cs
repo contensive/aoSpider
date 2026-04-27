@@ -6,8 +6,9 @@ using System.Text.RegularExpressions;
 using Contensive.BaseClasses;
 
 namespace Contensive.Addons.Spider {
-
-
+    /// <summary>
+    /// spider all link alias records
+    /// </summary>
     public class SpiderClass : AddonBaseClass {
 
         public class responseResult {
@@ -42,32 +43,32 @@ namespace Contensive.Addons.Spider {
                 // loop through each link in the link alias table
                 var links = Models.Db.DbBaseModel.createList<LinkAliasModel>(CP, sqlWhere, "spidered asc, datespidered asc, id desc", count);
                 foreach (var link in links) {
-                    string querystring = link.querystringsuffix;
+                    string querystring = link.queryStringSuffix;
                     string host = CP.Site.DomainPrimary;
                     bool qsHasFilePath = querystring.Contains("/files/");
 
                     // checks if the querystring is already inside the dictionary
                     bool insideDictionary = false;
-                    if (querystringDictionary.ContainsKey(link.querystringsuffix)) {
-                        if (querystringDictionary[link.querystringsuffix].Equals(link.pageid.ToString())) {
+                    if (querystringDictionary.ContainsKey(link.queryStringSuffix)) {
+                        if (querystringDictionary[link.queryStringSuffix].Equals(link.pageId.ToString())) {
                             insideDictionary = true;
                         }
                     }
 
                     // checks if this link's querystring is null and if this link's pageid is already inside the nullQuerystringPageList
-                    bool nullQSinList = string.IsNullOrEmpty(link.querystringsuffix) & nullQsList.Contains(link.pageid);
+                    bool nullQSinList = string.IsNullOrEmpty(link.queryStringSuffix) & nullQsList.Contains(link.pageId);
                     // checks if this link's querystring isn't null and if this link's querystring is already inside the querystringDictionary
-                    bool activeQsinList = !string.IsNullOrEmpty(link.querystringsuffix) & querystringDictionary.ContainsKey(link.querystringsuffix);
+                    bool activeQsinList = !string.IsNullOrEmpty(link.queryStringSuffix) & querystringDictionary.ContainsKey(link.queryStringSuffix);
                     var currentBlockedList = new List<int>();
 
                     if (!nullQSinList & !insideDictionary & !activeQsinList & !qsHasFilePath) {
-                        if (!string.IsNullOrEmpty(link.querystringsuffix)) {
-                            querystringDictionary.Add(link.querystringsuffix, link.pageid.ToString());
+                        if (!string.IsNullOrEmpty(link.queryStringSuffix)) {
+                            querystringDictionary.Add(link.queryStringSuffix, link.pageId.ToString());
                         } else {
-                            nullQsList.Add(link.pageid);
+                            nullQsList.Add(link.pageId);
                         }
                         currentLink = link.name;
-                        int pageid = link.pageid;
+                        int pageid = link.pageId;
                         bool blocked = false;
                         bool active = true;
                         // link manipulation to get the pagename 
@@ -84,7 +85,7 @@ namespace Contensive.Addons.Spider {
                         var csContent = CP.CSNew();
                         if (csContent.Open("Page Content", "id=" + pageid.ToString())) {
 
-                            if (string.IsNullOrEmpty(link.querystringsuffix)) {
+                            if (string.IsNullOrEmpty(link.queryStringSuffix)) {
                                 pageContentName = csContent.GetText("name");
                             }
                             blocked = csContent.GetBoolean("blockcontent");

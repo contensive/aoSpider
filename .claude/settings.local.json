@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Git/**)",
+      "Bash(dotnet build:*)",
+      "WebFetch(domain:contensive.s3.amazonaws.com)"
+    ]
+  }
+}
